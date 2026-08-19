@@ -23,13 +23,20 @@ export function useSucursales(empresaId: MaybeRefOrGetter<string | null>) {
     }
   );
 
-  const crearSucursalMutation = useSimpleMutationHook<SucursalResponse, { empresaId: string; data: CrearSucursalRequest }>(
-    (variables) => SUCURSALES_ENDPOINTS.base(variables.empresaId),
+  const crearSucursalMutation = useSimpleMutationHook<SucursalResponse, CrearSucursalRequest>(
+    () => {
+      const id = toValue(empresaId);
+      if (!id) throw new Error("ID de empresa requerido");
+      return SUCURSALES_ENDPOINTS.base(id);
+    },
     'POST',
     {
-      onSuccess: (_, variables) => {
-        // Invalidar las sucursales de esa empresa y la lista global de empresas
-        queryClient.invalidateQueries({ queryKey: [...SUCURSALES_KEYS.byEmpresa(variables.empresaId)] });
+      mutationKey: ['crear_sucursal'],
+      onSuccess: () => {
+        const id = toValue(empresaId);
+        if (id) {
+          queryClient.invalidateQueries({ queryKey: [...SUCURSALES_KEYS.byEmpresa(id)] });
+        }
         queryClient.invalidateQueries({ queryKey: [...EMPRESAS_KEYS.all] });
       }
     }

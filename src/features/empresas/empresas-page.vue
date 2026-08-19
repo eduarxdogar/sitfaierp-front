@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
 import ModalNuevaSucursal from './components/ModalNuevaSucursal.vue';
+import TablaSucursales from './components/TablaSucursales.vue';
 import { useToast } from '@/shared/composables/use-toast';
 import { useEmpresas } from './composables/useEmpresas';
 import { useSucursales } from './composables/useSucursales';
@@ -54,13 +55,17 @@ const abrirModalSucursal = (empresaId: string) => {
 const crearSucursal = async (payload: CrearSucursalRequest) => {
   if (!empresaIdSeleccionada.value) return;
   try {
-    await crearSucursalMutation.mutateAsync({ empresaId: empresaIdSeleccionada.value, data: payload });
+    await crearSucursalMutation.mutateAsync(payload);
     toast.success('Sucursal creada exitosamente.');
     isModalSucursalOpen.value = false;
   } catch (error: any) {
     console.error("Detalle del error:", error);
     toast.error(error.response?.data?.message || 'Error al crear la sucursal.');
   }
+};
+
+const manejarAccionPendiente = () => {
+  toast.error('Funcionalidad en construcción: Pendiente de contrato en Backend (PUT/DELETE)');
 };
 
 </script>
@@ -151,8 +156,8 @@ const crearSucursal = async (payload: CrearSucursalRequest) => {
                 <td class="py-2 px-3 font-semibold text-slate-800">{{ empresa.nombre }}</td>
                 <td class="py-2 px-3 text-slate-500 font-mono">{{ empresa.ruc }}</td>
                 <td class="py-2 px-3 text-center">
-                  <span :class="{'bg-emerald-100 text-emerald-700': empresa.estado === 'ACTIVO', 'bg-red-100 text-red-700': empresa.estado !== 'ACTIVO'}" class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold">
-                    {{ empresa.estado === 'ACTIVO' ? 'Activo' : 'Inactivo' }}
+                  <span :class="{'bg-emerald-100 text-emerald-700': ['ACTIVO', 'ACTIVA'].includes(empresa.estado?.toUpperCase()), 'bg-red-100 text-red-700': !['ACTIVO', 'ACTIVA'].includes(empresa.estado?.toUpperCase())}" class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold">
+                    {{ ['ACTIVO', 'ACTIVA'].includes(empresa.estado?.toUpperCase()) ? 'Activo' : 'Inactivo' }}
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
@@ -161,7 +166,7 @@ const crearSucursal = async (payload: CrearSucursalRequest) => {
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <button type="button" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer">
+                  <button type="button" @click.prevent="manejarAccionPendiente" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer">
                     <span class="material-symbols-outlined text-[18px]">edit</span>
                   </button>
                 </td>
@@ -182,33 +187,7 @@ const crearSucursal = async (payload: CrearSucursalRequest) => {
                       </button>
                     </div>
 
-                    <div v-if="!empresa.sucursales || empresa.sucursales.length === 0" class="p-3 bg-white border border-slate-200 rounded text-[12px] text-slate-500">
-                      Esta empresa aún no tiene sucursales registradas.
-                    </div>
-                    <div v-else class="border border-border bg-white rounded overflow-hidden shadow-sm">
-                      <table class="w-full text-left">
-                        <thead>
-                          <tr class="bg-surface-50 border-b border-border text-[10px] font-bold text-slate-500 uppercase">
-                            <th class="py-1.5 px-3 w-28 font-mono">ID SUC.</th>
-                            <th class="py-1.5 px-3">CÓDIGO</th>
-                            <th class="py-1.5 px-3">NOMBRE</th>
-                            <th class="py-1.5 px-3 w-24 text-center">ESTADO</th>
-                          </tr>
-                        </thead>
-                        <tbody class="text-[12px] text-slate-700 divide-y divide-slate-100">
-                          <tr v-for="sucursal in empresa.sucursales" :key="sucursal.id" class="hover:bg-slate-50/80 transition-colors">
-                            <td class="py-2 px-3 font-mono text-[11px] text-slate-400 font-medium">{{ sucursal.id }}</td>
-                            <td class="py-2 px-3 font-mono text-[11px] text-slate-600 font-medium">{{ sucursal.codigo }}</td>
-                            <td class="py-2 px-3 font-medium text-slate-800">{{ sucursal.nombre }}</td>
-                            <td class="py-2 px-3 text-center">
-                              <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100">
-                                {{ sucursal.estado || 'N/A' }}
-                              </span>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <TablaSucursales :empresa-id="empresa.id" />
                   </div>
                 </td>
               </tr>
