@@ -1,9 +1,10 @@
 ﻿<script setup lang="ts">
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
 import ModalNuevaSucursal from './components/ModalNuevaSucursal.vue';
 import TablaSucursales from './components/TablaSucursales.vue';
 import EmpresaActionsDropdown from './components/EmpresaActionsDropdown.vue';
+import BadgeConteoSucursales from './components/BadgeConteoSucursales.vue';
 import { useToast } from '@/shared/composables/use-toast';
 import { useEmpresas } from './composables/useEmpresas';
 import { useSucursales } from './composables/useSucursales';
@@ -21,7 +22,6 @@ const { isPending: isCreating } = crearEmpresaMutation;
 const isModalSucursalOpen = ref(false);
 const empresaIdSeleccionada = ref<string | null>(null);
 const expandedRowIds = ref<string[]>([]);
-const sucursalesCount = reactive<Record<string, number>>({});
 
 const { crearSucursalMutation } = useSucursales(empresaIdSeleccionada);
 const { isPending: isCreatingSucursal } = crearSucursalMutation;
@@ -169,8 +169,7 @@ const eliminarEmpresa = async (empresaId: string) => {
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <span v-if="sucursalesCount[empresa.id] !== undefined" class="px-2 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-full">{{ sucursalesCount[empresa.id] }}</span>
-                    <span v-else class="inline-flex items-center justify-center bg-blue-50 text-blue-700 w-6 h-6 rounded-full text-[11px] font-bold border border-blue-100">-</span>
+                  <BadgeConteoSucursales :empresa-id="empresa.id" />
                 </td>
                 <td class="py-2 px-3 text-center">
                   <EmpresaActionsDropdown 
@@ -197,7 +196,7 @@ const eliminarEmpresa = async (empresaId: string) => {
                       </button>
                     </div>
 
-                    <TablaSucursales :empresa-id="empresa.id" @update:count="(count) => sucursalesCount[empresa.id] = count" />
+                    <TablaSucursales :empresa-id="empresa.id" />
                   </div>
                 </td>
               </tr>
@@ -215,6 +214,7 @@ const eliminarEmpresa = async (empresaId: string) => {
     </div>
   </div>
 </template>
+
 
 
 

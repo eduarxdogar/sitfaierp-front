@@ -1,14 +1,11 @@
 ﻿<script setup lang="ts">
 import { useSucursales } from '../composables/useSucursales';
 import { useToast } from '@/shared/composables/use-toast';
-import { watch } from 'vue';
 
 const props = defineProps<{ empresaId: string }>();
-const emit = defineEmits(['update:count']);
 // Pasamos el prop como un getter para mantener la reactividad en FSD
 const { obtenerSucursales, cambiarEstadoSucursalMutation } = useSucursales(() => props.empresaId);
 const { data: sucursales, isLoading, isError } = obtenerSucursales;
-watch(sucursales, (val) => emit('update:count', val?.length || 0), { immediate: true });
 const toast = useToast();
 
 const cambiarEstado = async (sucursal: any) => {
@@ -78,4 +75,5 @@ const cambiarEstado = async (sucursal: any) => {
     </div>
   </div>
 </template>
+
 
