@@ -1,19 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import type { CrearEmpresaRequest } from '@/shared/types/empresas.types';
+import { toTypedSchema } from '@vee-validate/zod';
+import { useForm } from 'vee-validate';
+import { crearEmpresaSchema } from '../schema/empresas.schema';
+import type { CrearEmpresaRequest } from '../dto/empresas.dto';
 
 const emit = defineEmits<{
   (e: 'close'): void;
   (e: 'submit', payload: CrearEmpresaRequest): void;
 }>();
 
-const ruc = ref('');
-const razonSocial = ref('');
+const { defineField, handleSubmit, errors } = useForm({
+  validationSchema: toTypedSchema(crearEmpresaSchema),
+});
 
-const onSubmit = () => {
-  if (!ruc.value || !razonSocial.value) return;
-  emit('submit', { ruc: ruc.value, razonSocial: razonSocial.value });
-};
+const [ruc, rucProps] = defineField('ruc');
+const [razonSocial, razonSocialProps] = defineField('razonSocial');
+
+const onSubmit = handleSubmit((values) => {
+  emit('submit', { ruc: values.ruc, razonSocial: values.razonSocial });
+});
 </script>
 
 <template>
@@ -33,24 +38,28 @@ const onSubmit = () => {
       <!-- Body -->
       <form @submit.prevent="onSubmit" class="p-5 space-y-4">
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1">RUC / NIT</label>
+          <label for="ruc" class="block text-sm font-semibold text-slate-700 mb-1">RUC / NIT</label>
           <input 
-            v-model="ruc" 
+            id="ruc"
+            v-model="ruc"
+            v-bind="rucProps"
             type="text" 
-            placeholder="Ej. J-40123456-8" 
+            placeholder="Ej. 10401234568" 
             class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-            required
           />
+          <p v-if="errors.ruc" class="text-red-500 text-xs mt-1">{{ errors.ruc }}</p>
         </div>
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1">Razón Social</label>
+          <label for="razonSocial" class="block text-sm font-semibold text-slate-700 mb-1">Razón Social</label>
           <input 
-            v-model="razonSocial" 
+            id="razonSocial"
+            v-model="razonSocial"
+            v-bind="razonSocialProps"
             type="text" 
             placeholder="Ej. SITFAI Technologies C.A." 
             class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm"
-            required
           />
+          <p v-if="errors.razonSocial" class="text-red-500 text-xs mt-1">{{ errors.razonSocial }}</p>
         </div>
         
         <!-- Actions -->
