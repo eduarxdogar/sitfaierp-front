@@ -1,14 +1,19 @@
+export interface SucursalResponse {
+  id: string;
+  codigo: string;
+  nombre: string;
+  estado: string;
+  creadoEn: string;
+  actualizadoEn: string;
+}
 export interface EmpresaResponse {
   id: string;
   ruc: string;
-  razonSocial: string;
-  estado: boolean;
-}
-export interface SucursalResponse {
-  id: string;
-  empresaId: string;
-  nombre: string;
-  direccion: string;
+  nombre: string; 
+  estado: string;
+  sucursales: SucursalResponse[];
+  creadoEn: string;
+  actualizadoEn: string;
 }
 export interface CrearEmpresaRequest {
   ruc: string;

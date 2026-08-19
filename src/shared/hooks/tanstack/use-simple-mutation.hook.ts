@@ -23,19 +23,21 @@ import type {
  *   mutate(body, { onSuccess: (data) => { ... } });
  */
 export function useSimpleMutationHook<TResponse, TBody = any>(
-  url: string,
+  url: string | ((variables: TBody) => string),
   method: HttpMethod = "POST",
   options?: UseMutationOptions<TResponse, Error, TBody, unknown>,
   service?: string,
 ) {
   return useMutation<TResponse, Error, TBody>({
-    mutationFn: (body: TBody) =>
-      httpClient<TResponse, TBody>({
-        url,
+    mutationFn: (body: TBody) => {
+      const resolvedUrl = typeof url === 'function' ? url(body) : url;
+      return httpClient<TResponse, TBody>({
+        url: resolvedUrl,
         method,
         body,
         service,
-      }),
+      });
+    },
     onError: (error) => {
       const ApiError = error as unknown as ApiErrorResponse;
 

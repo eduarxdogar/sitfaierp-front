@@ -29,8 +29,8 @@ export function useSimpleQueryHook<
   TResponse,
   TParams extends object | undefined = any,
 >(
-  url: string,
-  queryKey: any[],
+  url: import("vue").MaybeRefOrGetter<string>,
+  queryKey: import("vue").MaybeRefOrGetter<any[]>,
   params?: TParams,
   options?: Omit<
     UseQueryOptions<TResponse, Error, TResponse, QueryKey>,
@@ -46,7 +46,7 @@ export function useSimpleQueryHook<
     queryKey: resolvedQueryKey,
     queryFn: () =>
       httpClient<TResponse, unknown, TParams>({
-        url,
+        url: toValue(url),
         method: "GET",
         params: resolvedParams.value,
         service,
