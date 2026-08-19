@@ -1,8 +1,9 @@
 ﻿<script setup lang="ts">
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
 import ModalNuevaSucursal from './components/ModalNuevaSucursal.vue';
 import TablaSucursales from './components/TablaSucursales.vue';
+import EmpresaActionsDropdown from './components/EmpresaActionsDropdown.vue';
 import { useToast } from '@/shared/composables/use-toast';
 import { useEmpresas } from './composables/useEmpresas';
 import { useSucursales } from './composables/useSucursales';
@@ -20,6 +21,7 @@ const { isPending: isCreating } = crearEmpresaMutation;
 const isModalSucursalOpen = ref(false);
 const empresaIdSeleccionada = ref<string | null>(null);
 const expandedRowIds = ref<string[]>([]);
+const sucursalesCount = reactive<Record<string, number>>({});
 
 const { crearSucursalMutation } = useSucursales(empresaIdSeleccionada);
 const { isPending: isCreatingSucursal } = crearSucursalMutation;
@@ -140,7 +142,7 @@ const eliminarEmpresa = async (empresaId: string) => {
             <tr class="bg-surface-50 border-b border-border text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               <th class="py-2 px-3 w-10 text-center"></th>
               <th class="py-2 px-3 w-28 font-mono">ID</th>
-              <th class="py-2 px-3">RAZÃ“N SOCIAL</th>
+              <th class="py-2 px-3">RAZON SOCIAL</th>
               <th class="py-2 px-3 w-32">RUC / NIT</th>
               <th class="py-2 px-3 w-24 text-center">ESTADO</th>
               <th class="py-2 px-3 w-24 text-center">SUCURSALES</th>
@@ -167,14 +169,16 @@ const eliminarEmpresa = async (empresaId: string) => {
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <span class="inline-flex items-center justify-center bg-blue-50 text-blue-700 w-6 h-6 rounded-full text-[11px] font-bold border border-blue-100">
-                    -
-                  </span>
+                  <span v-if="sucursalesCount[empresa.id] !== undefined" class="px-2 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-full">{{ sucursalesCount[empresa.id] }}</span>
+                    <span v-else class="inline-flex items-center justify-center bg-blue-50 text-blue-700 w-6 h-6 rounded-full text-[11px] font-bold border border-blue-100">-</span>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <button type="button" @click.prevent="eliminarEmpresa(empresa.id)" class="text-red-400 hover:text-red-600 p-1 cursor-pointer">
-                    <span class="material-symbols-outlined text-[18px]">delete</span>
-                  </button>
+                  <EmpresaActionsDropdown 
+                    :empresaId="empresa.id"
+                    @agregar-sucursal="abrirModalSucursal(empresa.id)"
+                    @modificar-estado="toast.success('Modificación de estado en desarrollo')"
+                    @eliminar="eliminarEmpresa(empresa.id)"
+                  />
                 </td>
               </tr>
 
@@ -193,7 +197,7 @@ const eliminarEmpresa = async (empresaId: string) => {
                       </button>
                     </div>
 
-                    <TablaSucursales :empresa-id="empresa.id" />
+                    <TablaSucursales :empresa-id="empresa.id" @update:count="(count) => sucursalesCount[empresa.id] = count" />
                   </div>
                 </td>
               </tr>
@@ -211,4 +215,8 @@ const eliminarEmpresa = async (empresaId: string) => {
     </div>
   </div>
 </template>
+
+
+
+
 

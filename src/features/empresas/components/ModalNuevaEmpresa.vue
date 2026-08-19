@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { crearEmpresaSchema } from '../schema/empresas.schema';
@@ -36,7 +36,7 @@ const onSubmit = handleSubmit((values) => {
       </div>
       
       <!-- Body -->
-      <form @submit.prevent="onSubmit" class="p-5 space-y-4">
+      <form @submit.prevent="onSubmit" class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div>
           <label for="ruc" class="block text-sm font-semibold text-slate-700 mb-1">RUC / NIT</label>
           <input 
@@ -50,7 +50,7 @@ const onSubmit = handleSubmit((values) => {
           <p v-if="errors.ruc" class="text-red-500 text-xs mt-1">{{ errors.ruc }}</p>
         </div>
         <div>
-          <label for="razonSocial" class="block text-sm font-semibold text-slate-700 mb-1">Razón Social</label>
+          <label for="razonSocial" class="block text-sm font-semibold text-slate-700 mb-1">RazÃ³n Social</label>
           <input 
             id="razonSocial"
             v-model="razonSocial"

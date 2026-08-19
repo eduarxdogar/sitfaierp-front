@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { ref } from 'vue';
 import { useToast } from '../../shared/composables/use-toast';
+import { useRoute } from 'vue-router';
 import { useBodegas } from './composables/useBodegas';
 import ModalNuevaBodega from './components/ModalNuevaBodega.vue';
 import type { CrearBodegaRequest } from './dto/bodegas.dto';
@@ -8,14 +9,16 @@ import type { CrearBodegaRequest } from './dto/bodegas.dto';
 const searchQuery = ref('');
 const isModalOpen = ref(false);
 const toast = useToast();
+const route = useRoute();
 
-const { obtenerBodegas, crearBodegaMutation } = useBodegas();
+const selectedSucursalId = ref<string>((route.query.sucursalId as string) || '00000000-0000-0000-0000-000000000000');
+const { obtenerBodegas, crearBodegaMutation } = useBodegas(selectedSucursalId);
 const { data: bodegas, isLoading, isError } = obtenerBodegas;
 const { isPending: isCreating } = crearBodegaMutation;
 
 // Por ahora usaremos un sucursalId hardcodeado o el endpoint fallarÃ¡ si es requerido por FSD
 // Idealmente se recibe de un filtro o un route param
-const selectedSucursalId = ref<string>('00000000-0000-0000-0000-000000000000'); 
+ 
 
 const crearBodega = async (payload: CrearBodegaRequest) => {
   try {
@@ -122,3 +125,5 @@ const crearBodega = async (payload: CrearBodegaRequest) => {
     </div>
   </div>
 </template>
+
+

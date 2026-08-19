@@ -1,11 +1,14 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useSucursales } from '../composables/useSucursales';
 import { useToast } from '@/shared/composables/use-toast';
+import { watch } from 'vue';
 
 const props = defineProps<{ empresaId: string }>();
+const emit = defineEmits(['update:count']);
 // Pasamos el prop como un getter para mantener la reactividad en FSD
 const { obtenerSucursales, cambiarEstadoSucursalMutation } = useSucursales(() => props.empresaId);
 const { data: sucursales, isLoading, isError } = obtenerSucursales;
+watch(sucursales, (val) => emit('update:count', val?.length || 0), { immediate: true });
 const toast = useToast();
 
 const cambiarEstado = async (sucursal: any) => {
@@ -36,14 +39,14 @@ const cambiarEstado = async (sucursal: any) => {
       Error al cargar las sucursales.
     </div>
     <div v-else-if="!sucursales || sucursales.length === 0" class="text-sm text-slate-500 italic">
-      Esta empresa aún no tiene sucursales registradas.
+      Esta empresa no tiene sucursales registradas.
     </div>
     <div v-else class="border border-border bg-white rounded overflow-hidden shadow-sm">
       <table class="w-full text-left">
         <thead>
           <tr class="bg-surface-50 border-b border-border text-[10px] font-bold text-slate-500 uppercase">
             <th class="py-1.5 px-3 w-28 font-mono">ID SUC.</th>
-            <th class="py-1.5 px-3">CÓDIGO</th>
+            <th class="py-1.5 px-3">CODIGO</th>
             <th class="py-1.5 px-3">NOMBRE</th>
             <th class="py-1.5 px-3 w-24 text-center">ESTADO</th>
             <th class="py-1.5 px-3 w-24 text-center">ACCIONES</th>
@@ -75,3 +78,4 @@ const cambiarEstado = async (sucursal: any) => {
     </div>
   </div>
 </template>
+

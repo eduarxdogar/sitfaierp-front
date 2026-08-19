@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { crearSucursalSchema } from '../schema/sucursales.schema';
@@ -40,9 +40,9 @@ const onSubmit = handleSubmit((values) => {
       </div>
       
       <!-- Body -->
-      <form @submit.prevent="onSubmit" class="p-5 space-y-4">
+      <form @submit.prevent="onSubmit" class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div>
-          <label for="codigoSucursal" class="block text-sm font-semibold text-slate-700 mb-1">Código</label>
+          <label for="codigoSucursal" class="block text-sm font-semibold text-slate-700 mb-1">CÃ³digo</label>
           <input 
             id="codigoSucursal"
             v-model="codigo"
@@ -69,7 +69,7 @@ const onSubmit = handleSubmit((values) => {
         <!-- Campos inertes pendientes de backend -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="ubicacionSucursal" class="block text-sm font-semibold text-slate-700 mb-1">Ubicación</label>
+            <label for="ubicacionSucursal" class="block text-sm font-semibold text-slate-700 mb-1">UbicaciÃ³n</label>
             <!-- Pendiente de backend -->
             <input 
               id="ubicacionSucursal"
@@ -80,7 +80,7 @@ const onSubmit = handleSubmit((values) => {
             />
           </div>
           <div>
-            <label for="telefonoSucursal" class="block text-sm font-semibold text-slate-700 mb-1">Teléfono</label>
+            <label for="telefonoSucursal" class="block text-sm font-semibold text-slate-700 mb-1">TelÃ©fono</label>
             <!-- Pendiente de backend -->
             <input 
               id="telefonoSucursal"
@@ -92,7 +92,7 @@ const onSubmit = handleSubmit((values) => {
           </div>
         </div>
         <div>
-          <label for="direccionSucursal" class="block text-sm font-semibold text-slate-700 mb-1">Dirección</label>
+          <label for="direccionSucursal" class="block text-sm font-semibold text-slate-700 mb-1">DirecciÃ³n</label>
           <!-- Pendiente de backend -->
           <textarea 
             id="direccionSucursal"
@@ -126,3 +126,4 @@ const onSubmit = handleSubmit((values) => {
     </div>
   </div>
 </template>
+

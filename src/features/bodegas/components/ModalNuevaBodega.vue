@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
 import { crearBodegaSchema } from '../schema/bodegas.schema';
@@ -38,9 +38,9 @@ const onSubmit = handleSubmit((values) => {
       </div>
       
       <!-- Body -->
-      <form @submit.prevent="onSubmit" class="p-5 space-y-4">
+      <form @submit.prevent="onSubmit" class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div>
-          <label for="codigoBodega" class="block text-sm font-semibold text-slate-700 mb-1">Código</label>
+          <label for="codigoBodega" class="block text-sm font-semibold text-slate-700 mb-1">CÃ³digo</label>
           <input 
             id="codigoBodega"
             v-model="codigo"
@@ -73,8 +73,8 @@ const onSubmit = handleSubmit((values) => {
           >
             <option value="" disabled>Seleccione un tipo</option>
             <option value="ALMACENAMIENTO">Almacenamiento General</option>
-            <option value="DISTRIBUCION">Centro de Distribución</option>
-            <option value="TRANSITO">Tránsito</option>
+            <option value="DISTRIBUCION">Centro de DistribuciÃ³n</option>
+            <option value="TRANSITO">TrÃ¡nsito</option>
           </select>
           <p v-if="errors.tipo" class="text-red-500 text-xs mt-1">{{ errors.tipo }}</p>
         </div>
@@ -102,3 +102,4 @@ const onSubmit = handleSubmit((values) => {
     </div>
   </div>
 </template>
+
