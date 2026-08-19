@@ -22,8 +22,19 @@ export function useEmpresas() {
     }
   );
 
+  const eliminarEmpresaMutation = useSimpleMutationHook<void, string>(
+    (id: string) => EMPRESAS_ENDPOINTS.detail(id),
+    'DELETE',
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [...EMPRESAS_KEYS.all] });
+      }
+    }
+  );
+
   return {
     obtenerEmpresas,
     crearEmpresaMutation,
+    eliminarEmpresaMutation,
   };
 }

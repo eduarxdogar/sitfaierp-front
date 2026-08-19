@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue';
 import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
 import ModalNuevaSucursal from './components/ModalNuevaSucursal.vue';
@@ -13,7 +13,7 @@ const isModalOpen = ref(false);
 const searchQuery = ref('');
 const toast = useToast();
 
-const { obtenerEmpresas, crearEmpresaMutation } = useEmpresas();
+const { obtenerEmpresas, crearEmpresaMutation, eliminarEmpresaMutation } = useEmpresas();
 const { data: empresas, isLoading } = obtenerEmpresas;
 const { isPending: isCreating } = crearEmpresaMutation;
 
@@ -32,7 +32,7 @@ const crearEmpresa = async (payload: CrearEmpresaRequest) => {
   } catch (error: any) {
     console.error("Detalle del error:", error);
     if (error.message && error.message.includes('Failed to fetch')) {
-        toast.error('Error de red: No se pudo conectar con el servidor (CORS o Caída).');
+        toast.error('Error de red: No se pudo conectar con el servidor (CORS o CaÃ­da).');
     } else {
         toast.error(error.response?.data?.message || 'Error de negocio al crear la empresa.');
     }
@@ -64,8 +64,14 @@ const crearSucursal = async (payload: CrearSucursalRequest) => {
   }
 };
 
-const manejarAccionPendiente = () => {
-  toast.error('Funcionalidad en construcción: Pendiente de contrato en Backend (PUT/DELETE)');
+const eliminarEmpresa = async (empresaId: string) => {
+  if (!confirm('¿Estás seguro de eliminar esta empresa?')) return;
+  try {
+    await eliminarEmpresaMutation.mutateAsync(empresaId);
+    toast.success('Empresa eliminada correctamente');
+  } catch (error: any) {
+    toast.error('Error al eliminar empresa');
+  }
 };
 
 </script>
@@ -90,7 +96,7 @@ const manejarAccionPendiente = () => {
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
         <h2 class="text-[20px] font-extrabold text-[#0b1c30] tracking-tight">Directorio de Empresas (Tenants)</h2>
-        <p class="text-[12px] text-slate-500 font-medium mt-0.5">Gestión centralizada de organizaciones, filiales y sedes operativas</p>
+        <p class="text-[12px] text-slate-500 font-medium mt-0.5">GestiÃ³n centralizada de organizaciones, filiales y sedes operativas</p>
       </div>
       <button 
         type="button"
@@ -115,7 +121,7 @@ const manejarAccionPendiente = () => {
             id="searchQuery"
             type="text" 
             v-model="searchQuery"
-            placeholder="Buscar por código, nombre o RUC/NIT..." 
+            placeholder="Buscar por cÃ³digo, nombre o RUC/NIT..." 
             class="w-full pl-9 pr-3 py-1.5 text-[12px] border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
           />
         </div>
@@ -134,7 +140,7 @@ const manejarAccionPendiente = () => {
             <tr class="bg-surface-50 border-b border-border text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               <th class="py-2 px-3 w-10 text-center"></th>
               <th class="py-2 px-3 w-28 font-mono">ID</th>
-              <th class="py-2 px-3">RAZÓN SOCIAL</th>
+              <th class="py-2 px-3">RAZÃ“N SOCIAL</th>
               <th class="py-2 px-3 w-32">RUC / NIT</th>
               <th class="py-2 px-3 w-24 text-center">ESTADO</th>
               <th class="py-2 px-3 w-24 text-center">SUCURSALES</th>
@@ -166,8 +172,8 @@ const manejarAccionPendiente = () => {
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <button type="button" @click.prevent="manejarAccionPendiente" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer">
-                    <span class="material-symbols-outlined text-[18px]">edit</span>
+                  <button type="button" @click.prevent="eliminarEmpresa(empresa.id)" class="text-red-400 hover:text-red-600 p-1 cursor-pointer">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
                   </button>
                 </td>
               </tr>
@@ -205,3 +211,4 @@ const manejarAccionPendiente = () => {
     </div>
   </div>
 </template>
+

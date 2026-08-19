@@ -5,6 +5,7 @@ export const EMPRESAS_KEYS = {
 };
 export const EMPRESAS_ENDPOINTS = {
   base: 'empresas',
+  detail: (id: string) => `empresas/${id}`,
   sucursales: (id: string) => `empresas/${id}/sucursales`,
   estado: (id: string) => `empresas/${id}/estado`,
 };
