@@ -1,10 +1,28 @@
 <script setup lang="ts">
 import { useSucursales } from '../composables/useSucursales';
+import { useToast } from '@/shared/composables/use-toast';
 
 const props = defineProps<{ empresaId: string }>();
 // Pasamos el prop como un getter para mantener la reactividad en FSD
-const { obtenerSucursales } = useSucursales(() => props.empresaId);
+const { obtenerSucursales, cambiarEstadoSucursalMutation } = useSucursales(() => props.empresaId);
 const { data: sucursales, isLoading, isError } = obtenerSucursales;
+const toast = useToast();
+
+const cambiarEstado = async (sucursal: any) => {
+  const isActivo = ['ACTIVO', 'ACTIVA'].includes(sucursal.estado?.toUpperCase());
+  const nuevoEstado = isActivo ? 'INACTIVO' : 'ACTIVO';
+  try {
+    await cambiarEstadoSucursalMutation.mutateAsync({
+      empresaId: props.empresaId,
+      sucursalId: sucursal.id,
+      nuevoEstado
+    });
+    toast.success(`Estado cambiado a ${nuevoEstado}`);
+  } catch (error: any) {
+    console.error("Detalle del error:", error);
+    toast.error(error.response?.data?.message || 'Error al cambiar estado.');
+  }
+};
 </script>
 
 <template>
@@ -28,6 +46,7 @@ const { data: sucursales, isLoading, isError } = obtenerSucursales;
             <th class="py-1.5 px-3">CÓDIGO</th>
             <th class="py-1.5 px-3">NOMBRE</th>
             <th class="py-1.5 px-3 w-24 text-center">ESTADO</th>
+            <th class="py-1.5 px-3 w-24 text-center">ACCIONES</th>
           </tr>
         </thead>
         <tbody class="text-[12px] text-slate-700 divide-y divide-slate-100">
@@ -39,6 +58,16 @@ const { data: sucursales, isLoading, isError } = obtenerSucursales;
               <span :class="['ACTIVO', 'ACTIVA'].includes(sucursal.estado?.toUpperCase()) ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] font-bold' : 'text-red-700 bg-red-100 px-2 py-0.5 rounded-full text-[10px] font-bold'">
                 {{ ['ACTIVO', 'ACTIVA'].includes(sucursal.estado?.toUpperCase()) ? 'Activo' : 'Inactivo' }}
               </span>
+            </td>
+            <td class="py-2 px-3 text-center">
+              <button 
+                type="button" 
+                @click="cambiarEstado(sucursal)"
+                class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer transition-colors"
+                title="Cambiar Estado"
+              >
+                <span class="material-symbols-outlined text-[18px]">toggle_on</span>
+              </button>
             </td>
           </tr>
         </tbody>

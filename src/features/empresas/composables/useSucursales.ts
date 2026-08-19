@@ -41,6 +41,16 @@ export function useSucursales(empresaId: MaybeRefOrGetter<string | null>) {
       }
     }
   );
+  const cambiarEstadoSucursalMutation = useSimpleMutationHook<SucursalResponse, { empresaId: string; sucursalId: string; nuevoEstado: string }>(
+    (variables) => SUCURSALES_ENDPOINTS.estado(variables.empresaId, variables.sucursalId),
+    'PATCH',
+    {
+      mutationKey: ['cambiar_estado_sucursal'],
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: [...SUCURSALES_KEYS.byEmpresa(variables.empresaId)] });
+      }
+    }
+  );
 
-  return { obtenerSucursales, crearSucursalMutation };
+  return { obtenerSucursales, crearSucursalMutation, cambiarEstadoSucursalMutation };
 }

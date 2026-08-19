@@ -162,7 +162,7 @@ const manejarAccionPendiente = () => {
                 </td>
                 <td class="py-2 px-3 text-center">
                   <span class="inline-flex items-center justify-center bg-blue-50 text-blue-700 w-6 h-6 rounded-full text-[11px] font-bold border border-blue-100">
-                    {{ empresa.sucursales?.length || 0 }}
+                    -
                   </span>
                 </td>
                 <td class="py-2 px-3 text-center">
