@@ -1,0 +1,6 @@
+{
+  "name": "SITFAI ERP",
+  "description": "Sistema Integral de Toma Física y Auditoría de Inventarios - Gestión de Tenants, Sucursales, Control de Stock y Administración Empresarial",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
