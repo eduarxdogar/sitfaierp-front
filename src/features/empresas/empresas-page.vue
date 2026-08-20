@@ -127,7 +127,7 @@ const eliminarEmpresa = async (empresaId: string) => {
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
         <h2 class="text-[20px] font-extrabold text-[#0b1c30] tracking-tight">Directorio de Empresas (Tenants)</h2>
-        <p class="text-[12px] text-slate-500 font-medium mt-0.5">GestiÃ³n centralizada de organizaciones, filiales y sedes operativas</p>
+        <p class="text-[12px] text-slate-500 font-medium mt-0.5">Gestión centralizada de organizaciones, filiales y sedes operativas</p>
       </div>
       <button 
         type="button"
@@ -152,7 +152,7 @@ const eliminarEmpresa = async (empresaId: string) => {
             id="searchQuery"
             type="text" 
             v-model="searchQuery"
-            placeholder="Buscar por cÃ³digo, nombre o RUC/NIT..." 
+            placeholder="Buscar por código, nombre o RUC/NIT..." 
             class="w-full pl-9 pr-3 py-1.5 text-[12px] border border-slate-300 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
           />
         </div>
