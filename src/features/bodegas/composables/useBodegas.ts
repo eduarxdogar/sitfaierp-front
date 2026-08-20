@@ -1,4 +1,4 @@
-﻿import { useSimpleQueryHook } from '@/shared/hooks/tanstack/use-simple-query.hook';
+import { useSimpleQueryHook } from '@/shared/hooks/tanstack/use-simple-query.hook';
 import { httpClient } from '@/shared/services/http/client';
 import { BODEGAS_ENDPOINTS, BODEGAS_KEYS } from '../constants/bodegas.keys';
 import type { BodegaResponse, CrearBodegaRequest } from '../dto/bodegas.dto';
@@ -9,16 +9,13 @@ import { useQueryClient, useMutation } from '@tanstack/vue-query';
 export function useBodegas(sucursalId?: MaybeRefOrGetter<string | null>, empresaId?: MaybeRefOrGetter<string | null>) {
   const queryClient = useQueryClient();
 
-  const obtenerBodegas = useSimpleQueryHook<BodegaResponse[], { sucursalId?: string }>(
-    () => BODEGAS_ENDPOINTS.base,
+  const obtenerBodegas = useSimpleQueryHook<BodegaResponse[], undefined>(
+    () => { const id = sucursalId ? toValue(sucursalId) : null; return id ? BODEGAS_ENDPOINTS.bySucursal(id) : BODEGAS_ENDPOINTS.base; },
     () => {
       const id = sucursalId ? toValue(sucursalId) : null;
       return id ? [...BODEGAS_KEYS.bySucursal(id)] : [...BODEGAS_KEYS.all];
     },
-    computed(() => {
-      const id = sucursalId ? toValue(sucursalId) : undefined;
-      return id ? { sucursalId: id } : undefined;
-    }) as any,
+    undefined,
     {
       enabled: computed(() => sucursalId === undefined || !!toValue(sucursalId)) as any,
     }
@@ -43,5 +40,6 @@ export function useBodegas(sucursalId?: MaybeRefOrGetter<string | null>, empresa
 
   return { obtenerBodegas, crearBodegaMutation };
 }
+
 
 

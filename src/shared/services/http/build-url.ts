@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
 
 export function buildUrl(url: any, params?: object): string {
   let cleanUrl = "";
@@ -27,3 +27,4 @@ export function buildUrl(url: any, params?: object): string {
   const queryString = query.toString();
   return queryString ? `${finalUrl}?${queryString}` : finalUrl;
 }
+
