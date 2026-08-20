@@ -1,12 +1,14 @@
 ﻿<script setup lang="ts">
 import { useSucursales } from '../composables/useSucursales';
 import { useToast } from '@/shared/composables/use-toast';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{ empresaId: string }>();
 // Pasamos el prop como un getter para mantener la reactividad en FSD
 const { obtenerSucursales, cambiarEstadoSucursalMutation } = useSucursales(() => props.empresaId);
 const { data: sucursales, isLoading, isError } = obtenerSucursales;
 const toast = useToast();
+const router = useRouter();
 
 const cambiarEstado = async (sucursal: any) => {
   const isActivo = ['ACTIVO', 'ACTIVA'].includes(sucursal.estado?.toUpperCase());
@@ -60,6 +62,14 @@ const cambiarEstado = async (sucursal: any) => {
               </span>
             </td>
             <td class="py-2 px-3 text-center">
+              <button
+                type="button"
+                @click="router.push({ path: '/bodegas', query: { sucursalId: sucursal.id, empresaId: props.empresaId, nombre: sucursal.nombre } })"
+                class="p-1 text-slate-400 hover:text-indigo-600 transition-colors"
+                title="Gestionar Bodegas"
+              >
+                <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+              </button>
               <button 
                 type="button" 
                 @click="cambiarEstado(sucursal)"
@@ -75,5 +85,7 @@ const cambiarEstado = async (sucursal: any) => {
     </div>
   </div>
 </template>
+
+
 
 

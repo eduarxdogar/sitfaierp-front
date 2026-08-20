@@ -1,4 +1,4 @@
-import {
+﻿import {
   createRouter,
   createWebHistory,
   type RouteLocationNormalized,
@@ -7,7 +7,6 @@ import { useAuthStore } from "@features/auth/store/auth.store.ts";
 import keycloak from "@shared/services/auth/keycloak.client.ts";
 import { markSessionExpired } from "@shared/services/token.service.ts";
 
-// ──────────────── Rutas públicas ───────────────────────────────────────────────────────────
 const publicRoutes = [
   {
     path: "/",
@@ -20,7 +19,6 @@ const publicRoutes = [
   },
 ];
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Rutas protegidas Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const protectedRoutes = [
   {
     path: "/dashboard",
@@ -40,6 +38,12 @@ const protectedRoutes = [
         meta: { key: "empresas" },
       },
       {
+        path: "/bodegas",
+        name: "bodegas",
+        component: () => import("@features/bodegas/bodegas-page.vue"),
+        meta: { key: "bodegas" },
+      },
+      {
         path: "/unauthorized",
         name: "unauthorized",
         component: () =>
@@ -56,13 +60,11 @@ const protectedRoutes = [
   },
 ];
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ CreaciÃƒÂ³n del router Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const router = createRouter({
   history: createWebHistory(),
   routes: [...publicRoutes, ...protectedRoutes],
 });
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ RecuperaciÃƒÂ³n de errores de Lazy Imports (chunk loading en producciÃƒÂ³n) Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 const CHUNK_RELOAD_STORAGE_KEY = "chunk-load-reload-attempted";
 const CHUNK_LOAD_ERROR_PATTERNS = [
   "Failed to fetch dynamically imported module",
@@ -87,7 +89,6 @@ router.onError((error, to) => {
   window.location.assign(to.fullPath);
 });
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Tipos para la meta del router Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 interface RoutePermissionByParam {
   param: string;
   values: Record<string, string>;
@@ -121,7 +122,6 @@ const getRoutePermission = (to: RouteLocationNormalized) => {
   return meta.permission;
 };
 
-// Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬ Navigation Guard Principal Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
 router.beforeEach(async (to) => {
   const authStore = useAuthStore();
   const routePermission = getRoutePermission(to);
@@ -132,12 +132,10 @@ router.beforeEach(async (to) => {
   // 1. Sincronizar auth desde Keycloak
   authStore.initFromKeycloak();
 
-  // 2. Rutas pÃƒÂºblicas: acceso libre
   if (!requiresAuth) {
     return true;
   }
 
-  // 3. No autenticado Ã¢â€ â€™ redirigir al IdP de Keycloak
   if (!keycloak.authenticated) {
     await keycloak.login({
       redirectUri: window.location.origin + to.fullPath,
@@ -145,7 +143,6 @@ router.beforeEach(async (to) => {
     return false;
   }
 
-  // 4. Refrescar token si estÃƒÂ¡ prÃƒÂ³ximo a expirar
   try {
     await keycloak.updateToken(30);
   } catch {
@@ -156,7 +153,6 @@ router.beforeEach(async (to) => {
     return false;
   }
 
-  // Ã°Å¸â€™Â¡ BYPASS TEMPORAL: Si el usuario tiene sesiÃƒÂ³n, permitir el acceso a dashboard
   if (to.path.startsWith('/dashboard')) {
     return true;
   }

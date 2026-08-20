@@ -1,6 +1,7 @@
 ﻿<script setup lang="ts">
 import { ref } from 'vue';
 import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
+import ModalEditarEmpresa from './components/ModalEditarEmpresa.vue';
 import ModalNuevaSucursal from './components/ModalNuevaSucursal.vue';
 import TablaSucursales from './components/TablaSucursales.vue';
 import EmpresaActionsDropdown from './components/EmpresaActionsDropdown.vue';
@@ -8,16 +9,19 @@ import BadgeConteoSucursales from './components/BadgeConteoSucursales.vue';
 import { useToast } from '@/shared/composables/use-toast';
 import { useEmpresas } from './composables/useEmpresas';
 import { useSucursales } from './composables/useSucursales';
-import type { CrearEmpresaRequest } from './dto/empresas.dto';
+import type { CrearEmpresaRequest, EmpresaResponse } from './dto/empresas.dto';
 import type { CrearSucursalRequest } from './dto/sucursales.dto';
 
 const isModalOpen = ref(false);
 const searchQuery = ref('');
 const toast = useToast();
 
-const { obtenerEmpresas, crearEmpresaMutation, eliminarEmpresaMutation } = useEmpresas();
+const { obtenerEmpresas, crearEmpresaMutation, eliminarEmpresaMutation, actualizarEmpresaMutation } = useEmpresas();
 const { data: empresas, isLoading } = obtenerEmpresas;
 const { isPending: isCreating } = crearEmpresaMutation;
+const { isPending: isUpdating } = actualizarEmpresaMutation;
+const isModalEditarOpen = ref(false);
+const empresaSeleccionada = ref<EmpresaResponse | null>(null);
 
 const isModalSucursalOpen = ref(false);
 const empresaIdSeleccionada = ref<string | null>(null);
@@ -38,6 +42,23 @@ const crearEmpresa = async (payload: CrearEmpresaRequest) => {
     } else {
         toast.error(error.response?.data?.message || 'Error de negocio al crear la empresa.');
     }
+  }
+};
+
+const abrirModalEditar = (empresa: EmpresaResponse) => {
+  empresaSeleccionada.value = empresa;
+  isModalEditarOpen.value = true;
+};
+
+const handleActualizarEmpresa = async (valoresFormulario: CrearEmpresaRequest) => {
+  if (!empresaSeleccionada.value) return;
+  try {
+    await actualizarEmpresaMutation.mutateAsync({ id: empresaSeleccionada.value.id, data: valoresFormulario });
+    toast.success('Empresa actualizada exitosamente.');
+    isModalEditarOpen.value = false;
+  } catch (error: any) {
+    console.error("Detalle del error:", error);
+    toast.error(error.response?.data?.message || 'Error al actualizar la empresa.');
   }
 };
 
@@ -86,6 +107,14 @@ const eliminarEmpresa = async (empresaId: string) => {
       v-if="isModalOpen" 
       @close="isModalOpen = false" 
       @submit="crearEmpresa" 
+    />
+
+    <ModalEditarEmpresa 
+      v-if="isModalEditarOpen" 
+      :empresa="empresaSeleccionada" 
+      :is-loading="isUpdating"
+      @close="isModalEditarOpen = false" 
+      @actualizar="handleActualizarEmpresa" 
     />
     <ModalNuevaSucursal
       v-if="isModalSucursalOpen"
@@ -172,7 +201,10 @@ const eliminarEmpresa = async (empresaId: string) => {
                   <BadgeConteoSucursales :empresa-id="empresa.id" />
                 </td>
                 <td class="py-2 px-3 text-center">
-                  <EmpresaActionsDropdown 
+                  <button @click.prevent="abrirModalEditar(empresa)" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer mr-1">
+                      <span class="material-symbols-outlined text-[18px]">edit</span>
+                    </button>
+                    <EmpresaActionsDropdown 
                     :empresaId="empresa.id"
                     @agregar-sucursal="abrirModalSucursal(empresa.id)"
                     @modificar-estado="toast.success('Modificación de estado en desarrollo')"
@@ -214,6 +246,11 @@ const eliminarEmpresa = async (empresaId: string) => {
     </div>
   </div>
 </template>
+
+
+
+
+
 
 
 

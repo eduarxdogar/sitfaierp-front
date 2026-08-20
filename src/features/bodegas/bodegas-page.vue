@@ -12,16 +12,18 @@ const toast = useToast();
 const route = useRoute();
 
 const selectedSucursalId = ref<string>((route.query.sucursalId as string) || '00000000-0000-0000-0000-000000000000');
-const { crearBodegaMutation } = useBodegas(selectedSucursalId);
+const selectedEmpresaId = ref<string>((route.query.empresaId as string) || '00000000-0000-0000-0000-000000000000');
+const { crearBodegaMutation, obtenerBodegas } = useBodegas(selectedSucursalId, selectedEmpresaId);
+const { isError, error: fetchError } = obtenerBodegas;
 const { isPending: isCreating } = crearBodegaMutation;
 
 // Por ahora usaremos un sucursalId hardcodeado o el endpoint fallarÃ¡ si es requerido por FSD
 // Idealmente se recibe de un filtro o un route param
  
 
-const crearBodega = async (payload: CrearBodegaRequest) => {
+const crearBodega = async (payload: Omit<CrearBodegaRequest, 'sucursalId'>) => {
   try {
-    await crearBodegaMutation.mutateAsync({ sucursalId: selectedSucursalId.value, data: payload });
+    await crearBodegaMutation.mutateAsync({ sucursalId: selectedSucursalId.value, ...payload });
     toast.success('Bodega creada exitosamente.');
     isModalOpen.value = false;
   } catch (error: any) {
@@ -57,9 +59,18 @@ const crearBodega = async (payload: CrearBodegaRequest) => {
     </div>
 
     <!-- Table Container -->
-    <TablaBodegas :sucursalId="selectedSucursalId" />
+    <div v-if="isError && (fetchError as any)?.status === 404" class="p-8 text-center bg-amber-50 border border-amber-200 rounded-lg">
+      <span class="material-symbols-outlined text-amber-500 text-4xl mb-2">construction</span>
+      <h3 class="text-amber-800 font-bold">Aviso: Endpoint GET /bodegas no implementado en backend</h3>
+      <p class="text-amber-600 text-sm mt-1">El backend an no tiene expuesto este recurso, por lo que devuelve un error 404 (Not Found).</p>
+    </div>
+    <TablaBodegas v-else :sucursal-id="selectedSucursalId" />
   </div>
 </template>
+
+
+
+
 
 
 

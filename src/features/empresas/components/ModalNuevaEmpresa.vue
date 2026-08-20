@@ -50,7 +50,7 @@ const onSubmit = handleSubmit((values) => {
           <p v-if="errors.ruc" class="text-red-500 text-xs mt-1">{{ errors.ruc }}</p>
         </div>
         <div>
-          <label for="razonSocial" class="block text-sm font-semibold text-slate-700 mb-1">RazÃ³n Social</label>
+          <label for="razonSocial" class="block text-sm font-semibold text-slate-700 mb-1">Razón Social</label>
           <input 
             id="razonSocial"
             v-model="razonSocial"

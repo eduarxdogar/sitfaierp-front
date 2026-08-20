@@ -1,4 +1,4 @@
-import { useSimpleQueryHook } from '@/shared/hooks/tanstack/use-simple-query.hook';
+﻿import { useSimpleQueryHook } from '@/shared/hooks/tanstack/use-simple-query.hook';
 import { useSimpleMutationHook } from '@/shared/hooks/tanstack/use-simple-mutation.hook';
 import { EMPRESAS_ENDPOINTS, EMPRESAS_KEYS } from '../constants/empresas.keys';
 import type { EmpresaResponse, CrearEmpresaRequest } from '../dto/empresas.dto';
@@ -32,9 +32,21 @@ export function useEmpresas() {
     }
   );
 
+  const actualizarEmpresaMutation = useSimpleMutationHook<EmpresaResponse, { id: string; data: CrearEmpresaRequest }>(
+    (vars) => EMPRESAS_ENDPOINTS.detail(vars.id),
+    'PUT',
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [...EMPRESAS_KEYS.all] });
+      }
+    }
+  );
+
   return {
     obtenerEmpresas,
     crearEmpresaMutation,
     eliminarEmpresaMutation,
+    actualizarEmpresaMutation,
   };
 }
+

@@ -28,7 +28,6 @@ const { data: bodegas, isLoading, isError } = obtenerBodegas;
             <th class="py-2 px-3 w-28 font-mono">ID</th>
             <th class="py-2 px-3">CÓDIGO</th>
             <th class="py-2 px-3">NOMBRE</th>
-            <th class="py-2 px-3">TIPO</th>
             <th class="py-2 px-3 w-24 text-center">ESTADO</th>
           </tr>
         </thead>
@@ -38,10 +37,9 @@ const { data: bodegas, isLoading, isError } = obtenerBodegas;
               <td class="py-2 px-3 font-mono text-[11px] text-blue-600 font-bold">{{ bodega.id }}</td>
               <td class="py-2 px-3 font-mono text-slate-600">{{ bodega.codigo }}</td>
               <td class="py-2 px-3 font-semibold text-slate-800">{{ bodega.nombre }}</td>
-              <td class="py-2 px-3 text-slate-600">{{ bodega.tipo }}</td>
               <td class="py-2 px-3 text-center">
-                <span :class="['ACTIVO', 'ACTIVA'].includes(bodega.estado?.toUpperCase()) ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] font-bold' : 'text-red-700 bg-red-100 px-2 py-0.5 rounded-full text-[10px] font-bold'">
-                  {{ ['ACTIVO', 'ACTIVA'].includes(bodega.estado?.toUpperCase()) ? 'Activo' : 'Inactivo' }}
+                <span :class="['ACTIVO', 'ACTIVA'].includes(bodega.activa ? 'ACTIVO' : 'INACTIVO'.toUpperCase()) ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] font-bold' : 'text-red-700 bg-red-100 px-2 py-0.5 rounded-full text-[10px] font-bold'">
+                  {{ ['ACTIVO', 'ACTIVA'].includes(bodega.activa ? 'ACTIVO' : 'INACTIVO'.toUpperCase()) ? 'Activo' : 'Inactivo' }}
                 </span>
               </td>
             </tr>
@@ -58,3 +56,5 @@ const { data: bodegas, isLoading, isError } = obtenerBodegas;
     </div>
   </div>
 </template>
+
+

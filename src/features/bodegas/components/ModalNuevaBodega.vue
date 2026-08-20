@@ -7,7 +7,7 @@ import type { CrearBodegaRequest } from '../dto/bodegas.dto';
 const props = defineProps<{ isLoading?: boolean }>();
 const emit = defineEmits<{
   (e: 'close'): void;
-  (e: 'submit', payload: CrearBodegaRequest): void;
+  (e: 'submit', payload: Omit<CrearBodegaRequest, 'sucursalId'>): void;
 }>();
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -16,10 +16,9 @@ const { defineField, handleSubmit, errors } = useForm({
 
 const [codigo, codigoProps] = defineField('codigo');
 const [nombre, nombreProps] = defineField('nombre');
-const [tipo, tipoProps] = defineField('tipo');
 
 const onSubmit = handleSubmit((values) => {
-  emit('submit', { codigo: values.codigo, nombre: values.nombre, tipo: values.tipo });
+  emit('submit', { codigo: values.codigo, nombre: values.nombre });
 });
 </script>
 
@@ -38,9 +37,9 @@ const onSubmit = handleSubmit((values) => {
       </div>
       
       <!-- Body -->
-      <form @submit.prevent="onSubmit" class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <form @submit.prevent="onSubmit" class="p-5 space-y-4 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
         <div>
-          <label for="codigoBodega" class="block text-sm font-semibold text-slate-700 mb-1">CÃ³digo</label>
+          <label for="codigoBodega" class="block text-sm font-semibold text-slate-700 mb-1">Código</label>
           <input 
             id="codigoBodega"
             v-model="codigo"
@@ -64,20 +63,18 @@ const onSubmit = handleSubmit((values) => {
           <p v-if="errors.nombre" class="text-red-500 text-xs mt-1">{{ errors.nombre }}</p>
         </div>
         <div>
-          <label for="tipoBodega" class="block text-sm font-semibold text-slate-700 mb-1">Tipo</label>
+          <label for="tipoBodega" class="block text-sm font-semibold text-slate-700 mb-1">Tipo <span class="text-[10px] text-slate-400 font-normal ml-1">(Pendiente de Backend)</span></label>
           <select 
             id="tipoBodega"
-            v-model="tipo"
-            v-bind="tipoProps"
-            class="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm bg-white"
+            disabled
+            class="w-full px-3 py-2 border border-slate-300 rounded-md bg-slate-100 text-slate-400 cursor-not-allowed transition-all text-sm"
           >
             <option value="" disabled>Seleccione un tipo</option>
             <option value="ALMACENAMIENTO">Almacenamiento General</option>
-            <option value="DISTRIBUCION">Centro de DistribuciÃ³n</option>
-            <option value="TRANSITO">TrÃ¡nsito</option>
+            <option value="DISTRIBUCION">Centro de Distribución</option>
+            <option value="TRANSITO">Tránsito</option>
           </select>
-          <p v-if="errors.tipo" class="text-red-500 text-xs mt-1">{{ errors.tipo }}</p>
-        </div>
+                  </div>
         
         <!-- Actions -->
         <div class="pt-4 flex justify-end gap-2 border-t border-slate-100 mt-6">
@@ -102,4 +99,7 @@ const onSubmit = handleSubmit((values) => {
     </div>
   </div>
 </template>
+
+
+
 
