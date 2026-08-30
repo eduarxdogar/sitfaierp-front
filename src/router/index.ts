@@ -1,4 +1,4 @@
-﻿import {
+import {
   createRouter,
   createWebHistory,
   type RouteLocationNormalized,
@@ -42,6 +42,18 @@ const protectedRoutes = [
         name: "bodegas",
         component: () => import("@features/bodegas/bodegas-page.vue"),
         meta: { key: "bodegas" },
+      },
+      {
+        path: '/productos',
+        name: 'productos',
+        component: () => import('@features/productos/productos-page.vue'),
+        meta: { key: 'productos' }
+      },
+      {
+        path: '/iam',
+        name: 'iam',
+        component: () => import('@features/iam/iam-page.vue'),
+        meta: { key: 'iam' },
       },
       {
         path: "/unauthorized",

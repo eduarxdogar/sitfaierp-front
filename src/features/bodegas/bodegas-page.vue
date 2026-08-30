@@ -17,8 +17,7 @@ const { crearBodegaMutation, obtenerBodegas } = useBodegas(selectedSucursalId, s
 const { isError, error: fetchError } = obtenerBodegas;
 const { isPending: isCreating } = crearBodegaMutation;
 
-// Por ahora usaremos un sucursalId hardcodeado o el endpoint fallarÃ¡ si es requerido por FSD
-// Idealmente se recibe de un filtro o un route param
+
  
 
 const crearBodega = async (payload: Omit<CrearBodegaRequest, 'sucursalId'>) => {
@@ -46,7 +45,7 @@ const crearBodega = async (payload: Omit<CrearBodegaRequest, 'sucursalId'>) => {
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
         <h2 class="text-[20px] font-extrabold text-[#0b1c30] tracking-tight">Directorio de Bodegas</h2>
-        <p class="text-[12px] text-slate-500 font-medium mt-0.5">GestiÃ³n y control de inventarios, almacenes y centros de distribuciÃ³n</p>
+        <p class="text-[12px] text-slate-500 font-medium mt-0.5">Gestión y control de inventarios, almacenes y centros de distribución</p>
       </div>
       <button 
         type="button"

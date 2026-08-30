@@ -1,0 +1,6 @@
+{
+  "name": "SITFAI ERP",
+  "description": "Sistema de gestión empresarial integral (ERP) con arquitectura Feature-Sliced Design (FSD), módulo IAM (Usuarios y Roles RBAC), Pedidos y Autenticación Corporativa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

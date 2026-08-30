@@ -8,7 +8,7 @@ const authStore = useAuthStore();
 
 const navItems = ref([
   { id: 'dashboard', label: 'Dashboard Ejecutivo', icon: 'dashboard', route: '/dashboard' },
-  { id: 'iam', label: 'Identidad y Accesos (IAM)', icon: 'shield_person', route: '#' },
+  { id: 'iam', label: 'Identidad y Accesos (IAM)', icon: 'shield_person', route: '/iam' },
   { id: 'tenant-branches', label: 'Gestión de Empresas', icon: 'domain', route: '/empresas' },
   { id: 'sales', label: 'Órdenes y Ventas', icon: 'receipt_long', route: '#' },
   { id: 'inventory', label: 'Auditoría y Tomas Físicas', icon: 'inventory_2', route: '#' },
