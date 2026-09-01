@@ -33,15 +33,13 @@ export interface RolResponse {
 }
 
 export interface CrearUsuarioRequest {
-  nombreCompleto: string;
   username: string;
   email: string;
-  rolId: string;
-  empresa: string;
-  empresa_id: string;
-  sucursal?: string;
-  estado: EstadoUsuario;
-  enviarInvitacion?: boolean;
+  rol: string;
+  sucursalId?: string;
+  // Estos campos visuales podrían agregarse en el futuro si el backend los soporta
+  nombreCompleto?: string;
+  estado?: EstadoUsuario;
 }
 
 export interface CambiarEstadoRequest {

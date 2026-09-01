@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, watch, ref } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { crearUsuarioSchema } from '../schema/iam.schema';
 import type { UsuarioResponse, RolResponse, CrearUsuarioRequest, EstadoUsuario } from '../dto/iam.dto';
+import { useSucursales } from '../../empresas/composables/useSucursales';
+import keycloak from '@/shared/services/auth/keycloak.client';
 
 // ─── Props & Emits ────────────────────────────────────────────────────────────
 const props = defineProps<{
@@ -21,6 +23,13 @@ const emit = defineEmits<{
 // ─── Form Setup ───────────────────────────────────────────────────────────────
 const isEditing = computed(() => !!props.usuarioEnEdicion);
 
+const tenantId = computed(() => {
+  const parsedToken = keycloak.tokenParsed as any;
+  return parsedToken?.empresa_id || '';
+});
+const { obtenerSucursales } = useSucursales(tenantId);
+const sucursales = obtenerSucursales.data;
+
 const { handleSubmit, resetForm, errors } = useForm({
   validationSchema: toTypedSchema(crearUsuarioSchema),
   initialValues: {
@@ -28,9 +37,7 @@ const { handleSubmit, resetForm, errors } = useForm({
     username: '',
     email: '',
     rolId: '',
-    empresa: 'SITFAI Headquarters',
-    empresa_id: '',
-    sucursal: 'Sede Principal',
+    sucursalId: '',
     estado: 'ACTIVO' as EstadoUsuario,
     enviarInvitacion: true,
   },
@@ -40,10 +47,7 @@ const { value: nombreCompleto } = useField<string>('nombreCompleto');
 const { value: username } = useField<string>('username');
 const { value: email } = useField<string>('email');
 const { value: rolId } = useField<string>('rolId');
-const { value: empresa } = useField<string>('empresa');
-// empresa_id se vincula por v-model directamente en el template sin necesidad de variable local
-useField<string>('empresa_id');
-const { value: sucursal } = useField<string>('sucursal');
+const { value: sucursalId } = useField<string>('sucursalId');
 const { value: estado } = useField<EstadoUsuario>('estado');
 const { value: enviarInvitacion } = useField<boolean>('enviarInvitacion');
 
@@ -60,9 +64,7 @@ watch(
           username: usuario.username,
           email: usuario.email,
           rolId: usuario.rolId,
-          empresa: usuario.empresa,
-          empresa_id: usuario.empresa_id,
-          sucursal: usuario.sucursal ?? '',
+          sucursalId: '', // TODO: Ajustar si el response mapea sucursal a sucursalId
           estado: usuario.estado,
           enviarInvitacion: false,
         },
@@ -76,7 +78,15 @@ watch(
 
 // ─── Submit ───────────────────────────────────────────────────────────────────
 const onSubmit = handleSubmit((values) => {
-  emit('submit', values as CrearUsuarioRequest);
+  const rolEncontrado = props.roles.find((r) => r.id === values.rolId);
+  
+  const payload: CrearUsuarioRequest = {
+    username: values.username,
+    email: values.email,
+    rol: rolEncontrado?.codigo || '',
+    sucursalId: values.sucursalId,
+  };
+  emit('submit', payload);
 });
 </script>
 
@@ -212,41 +222,29 @@ const onSubmit = handleSubmit((values) => {
           </div>
         </div>
 
-        <!-- Empresa & Sucursal -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="iam-empresa" class="block text-xs font-semibold text-text-main mb-1">
-              Empresa / Razón Social <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-              <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-text-muted pointer-events-none">business</span>
-              <input
-                id="iam-empresa"
-                v-model="empresa"
-                type="text"
-                placeholder="Ej. SITFAI S.A.C."
-                class="w-full pl-9 pr-3 py-2 text-sm border rounded-lg bg-surface-50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-                :class="errors.empresa ? 'border-red-500' : 'border-border'"
-              />
-            </div>
-            <span v-if="errors.empresa" class="text-[11px] text-red-600 mt-1 block">
-              {{ errors.empresa }}
-            </span>
-          </div>
-
+        <!-- Sucursal Dinámica -->
+        <div class="grid grid-cols-1 gap-4">
           <div>
             <label for="iam-sucursal" class="block text-xs font-semibold text-text-main mb-1">
               Sucursal / Sede
             </label>
             <div class="relative">
               <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-text-muted pointer-events-none">store</span>
-              <input
+              <select
                 id="iam-sucursal"
-                v-model="sucursal"
-                type="text"
-                placeholder="Ej. Sede Central / Almacén #1"
-                class="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-surface-50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-              />
+                v-model="sucursalId"
+                class="w-full pl-9 pr-8 py-2 text-sm border border-border rounded-lg bg-surface-50 focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all appearance-none cursor-pointer"
+                :disabled="obtenerSucursales.isLoading.value"
+              >
+                <option value="" disabled>
+                  {{ obtenerSucursales.isLoading.value ? 'Cargando...' : 'Seleccione una sucursal...' }}
+                </option>
+                <option v-for="suc in sucursales" :key="suc.id" :value="suc.id">
+                  {{ suc.nombre }}
+                </option>
+              </select>
+              <span v-if="obtenerSucursales.isLoading.value" class="material-symbols-outlined absolute right-2.5 top-2.5 text-[18px] text-primary animate-spin pointer-events-none">sync</span>
+              <span v-else class="material-symbols-outlined absolute right-2.5 top-2.5 text-[18px] text-text-muted pointer-events-none">expand_more</span>
             </div>
           </div>
         </div>

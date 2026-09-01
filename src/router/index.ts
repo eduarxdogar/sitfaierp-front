@@ -35,31 +35,31 @@ const protectedRoutes = [
         path: "/empresas",
         name: "empresas",
         component: () => import("@features/empresas/empresas-page.vue"),
-        meta: { key: "empresas" },
+        meta: { key: "empresas", allowedRoles: ['SUPER_ADMIN'] },
       },
       {
         path: "/bodegas",
         name: "bodegas",
         component: () => import("@features/bodegas/bodegas-page.vue"),
-        meta: { key: "bodegas" },
+        meta: { key: "bodegas", allowedRoles: ['SUPER_ADMIN'] },
       },
       {
         path: '/productos',
         name: 'productos',
         component: () => import('@features/productos/productos-page.vue'),
-        meta: { key: 'productos' }
+        meta: { key: 'productos', allowedRoles: ['SUPER_ADMIN'] }
       },
       {
         path: '/iam',
         name: 'iam',
         component: () => import('@features/iam/iam-page.vue'),
-        meta: { key: 'iam' },
+        meta: { key: 'iam', allowedRoles: ['SUPER_ADMIN'] },
       },
       {
         path: '/inventario',
         name: 'inventario',
         component: () => import('@features/inventory/inventory-page.vue'),
-        meta: { key: 'inventario' },
+        meta: { key: 'inventario', allowedRoles: ['SUPER_ADMIN', 'BODEGA_OPERATOR'] },
       },
       {
         path: "/unauthorized",
@@ -169,6 +169,18 @@ router.beforeEach(async (to) => {
       redirectUri: window.location.origin + to.fullPath,
     });
     return false;
+  }
+
+  if (to.meta.allowedRoles) {
+    const roles = to.meta.allowedRoles as string[];
+    const hasPermission = roles.some((role) => authStore.hasRole(role));
+    
+    if (!hasPermission) {
+      if (authStore.hasRole('BODEGA_OPERATOR')) {
+        return { name: 'inventario' };
+      }
+      return { name: 'dashboard' };
+    }
   }
 
   if (to.path.startsWith('/dashboard')) {

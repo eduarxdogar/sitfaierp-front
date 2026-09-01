@@ -49,19 +49,16 @@ const { value: descripcion } = useField<string>('descripcion');
 // Map: modulo -> Set<accion>
 const matrizPermisos = ref<Record<string, Set<string>>>({});
 
-function initMatriz() {
-  const init: Record<string, Set<string>> = {};
-  MODULOS.forEach((m) => {
-    init[m] = new Set();
-  });
-  matrizPermisos.value = init;
-}
-
 // Inicializar la matriz y el formulario
 watch(
   () => props.rolEnEdicion,
   (rol) => {
-    initMatriz();
+    // 1. Construir la matriz temporalmente
+    const nuevaMatriz: Record<string, Set<string>> = {};
+    MODULOS.forEach((m) => {
+      nuevaMatriz[m] = new Set();
+    });
+
     if (rol) {
       resetForm({
         values: {
@@ -70,16 +67,20 @@ watch(
           descripcion: rol.descripcion || '',
         },
       });
+      // Mapear los permisos del backend a la matriz
       if (rol.permisos) {
         rol.permisos.forEach((p) => {
-          if (matrizPermisos.value[p.modulo]) {
-            p.acciones.forEach((a) => matrizPermisos.value[p.modulo]!.add(a));
+          if (nuevaMatriz[p.modulo]) {
+            p.acciones.forEach((a) => nuevaMatriz[p.modulo]!.add(a));
           }
         });
       }
     } else {
       resetForm();
     }
+    
+    // 2. Asignar al ref reactivo para disparar la actualización de los checkboxes
+    matrizPermisos.value = nuevaMatriz;
   },
   { immediate: true },
 );

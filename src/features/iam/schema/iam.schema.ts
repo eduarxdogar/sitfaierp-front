@@ -24,13 +24,7 @@ export const crearUsuarioSchema = z.object({
     .string()
     .min(1, 'Debe asignar un rol al usuario'),
 
-  empresa: z
-    .string()
-    .min(2, 'La empresa es requerida'),
-
-  empresa_id: z.string().optional(),
-
-  sucursal: z.string().optional(),
+  sucursalId: z.string().optional(),
 
   estado: estadoUsuarioSchema.default('ACTIVO'),
 
