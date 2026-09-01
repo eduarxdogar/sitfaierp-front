@@ -28,9 +28,7 @@ export const crearUsuarioSchema = z.object({
     .string()
     .min(2, 'La empresa es requerida'),
 
-  empresa_id: z
-    .string()
-    .min(1, 'El ID de empresa es requerido'),
+  empresa_id: z.string().optional(),
 
   sucursal: z.string().optional(),
 
