@@ -113,7 +113,7 @@ const openKardex = (producto: ProductoInventario) => {
           </span>
         </div>
         <p class="text-xs text-surface-500 mt-0.5">
-          Existencias fÃ­sicas valorizadas en tiempo real, trazabilidad por SKU y registro de movimientos de almacén.
+          Existencias físicas valorizadas en tiempo real, trazabilidad por SKU y registro de movimientos de almacén.
         </p>
       </div>
 

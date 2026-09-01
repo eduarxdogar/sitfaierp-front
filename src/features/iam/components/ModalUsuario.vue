@@ -53,6 +53,7 @@ const { value: enviarInvitacion } = useField<boolean>('enviarInvitacion');
 
 const estados: EstadoUsuario[] = ['ACTIVO', 'INACTIVO', 'INVITADO', 'BLOQUEADO'];
 
+
 watch(
   () => props.usuarioEnEdicion,
   (usuario) => {

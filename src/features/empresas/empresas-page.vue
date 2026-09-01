@@ -4,9 +4,13 @@ import ModalNuevaEmpresa from './components/ModalNuevaEmpresa.vue';
 import ModalEditarEmpresa from './components/ModalEditarEmpresa.vue';
 import EmpresaActionsDropdown from './components/EmpresaActionsDropdown.vue';
 import BadgeConteoSucursales from './sub-features/sucursales/BadgeConteoSucursales.vue';
+import TablaSucursales from './sub-features/sucursales/TablaSucursales.vue';
+import ModalNuevaSucursal from './sub-features/sucursales/ModalNuevaSucursal.vue';
 import { useToast } from '@/shared/composables/use-toast';
 import { useEmpresas } from './composables/useEmpresas';
+import { useSucursales } from './sub-features/sucursales/useSucursales';
 import type { CrearEmpresaRequest, EmpresaResponse } from './dto/empresas.dto';
+import type { CrearSucursalRequest } from './sub-features/sucursales/sucursales.dto';
 
 const isModalOpen = ref(false);
 const searchQuery = ref('');
@@ -19,6 +23,40 @@ const { isPending: isUpdating } = actualizarEmpresaMutation;
 const isModalEditarOpen = ref(false);
 const empresaSeleccionada = ref<EmpresaResponse | null>(null);
 
+// ─── Acordeón de Sucursales ───────────────────────────────────────────────────
+const expandedRowIds = ref<string[]>([]);
+const isModalSucursalOpen = ref(false);
+const empresaIdSeleccionada = ref<string | null>(null);
+
+const { crearSucursalMutation } = useSucursales(empresaIdSeleccionada);
+const { isPending: isCreatingSucursal } = crearSucursalMutation;
+
+const toggleRow = (id: string) => {
+  if (expandedRowIds.value.includes(id)) {
+    expandedRowIds.value = expandedRowIds.value.filter(rowId => rowId !== id);
+  } else {
+    expandedRowIds.value.push(id);
+  }
+};
+
+const abrirModalSucursal = (empresaId: string) => {
+  empresaIdSeleccionada.value = empresaId;
+  isModalSucursalOpen.value = true;
+};
+
+const crearSucursal = async (payload: CrearSucursalRequest) => {
+  if (!empresaIdSeleccionada.value) return;
+  try {
+    await crearSucursalMutation.mutateAsync(payload);
+    toast.success('Sucursal creada exitosamente.');
+    isModalSucursalOpen.value = false;
+  } catch (error: any) {
+    console.error("Detalle del error:", error);
+    toast.error(error.response?.data?.message || 'Error al crear la sucursal.');
+  }
+};
+// ─────────────────────────────────────────────────────────────────────────────
+
 const crearEmpresa = async (payload: CrearEmpresaRequest) => {
   try {
     await crearEmpresaMutation.mutateAsync(payload);
@@ -27,7 +65,7 @@ const crearEmpresa = async (payload: CrearEmpresaRequest) => {
   } catch (error: any) {
     console.error("Detalle del error:", error);
     if (error.message && error.message.includes('Failed to fetch')) {
-        toast.error('Error de red: No se pudo conectar con el servidor (CORS o CaÃ­da).');
+        toast.error('Error de red: No se pudo conectar con el servidor.');
     } else {
         toast.error(error.response?.data?.message || 'Error de negocio al crear la empresa.');
     }
@@ -50,8 +88,6 @@ const handleActualizarEmpresa = async (valoresFormulario: CrearEmpresaRequest) =
     toast.error(error.response?.data?.message || 'Error al actualizar la empresa.');
   }
 };
-
-
 
 const eliminarEmpresa = async (empresaId: string) => {
   if (!confirm('¿Estás seguro de eliminar esta empresa?')) return;
@@ -83,6 +119,12 @@ const eliminarEmpresa = async (empresaId: string) => {
       @actualizar="handleActualizarEmpresa" 
     />
 
+    <ModalNuevaSucursal
+      v-if="isModalSucursalOpen"
+      :is-loading="isCreatingSucursal"
+      @close="isModalSucursalOpen = false"
+      @submit="crearSucursal"
+    />
 
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -144,8 +186,8 @@ const eliminarEmpresa = async (empresaId: string) => {
               <!-- Main Row -->
               <tr class="hover:bg-slate-50 transition-colors group">
                 <td class="py-2 px-3 text-center">
-                  <button type="button" class="text-slate-200 cursor-not-allowed">
-                    <span class="material-symbols-outlined text-[20px]">
+                  <button type="button" @click="toggleRow(empresa.id)" class="text-slate-400 hover:text-blue-600 transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-[20px] transition-transform duration-200" :class="{ 'rotate-90': expandedRowIds.includes(empresa.id) }">
                       chevron_right
                     </span>
                   </button>
@@ -165,18 +207,39 @@ const eliminarEmpresa = async (empresaId: string) => {
                   <button @click.prevent="abrirModalEditar(empresa)" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer mr-1">
                       <span class="material-symbols-outlined text-[18px]">edit</span>
                   </button>
-                  <button @click.prevent="$router.push(`/empresas/${empresa.id}/sucursales`)" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer mr-1" title="Ver Sucursales">
-                      <span class="material-symbols-outlined text-[18px]">store</span>
-                  </button>
                   <EmpresaActionsDropdown 
                     :empresaId="empresa.id"
+                    @agregar-sucursal="abrirModalSucursal(empresa.id)"
                     @modificar-estado="toast.success('Modificación de estado en desarrollo')"
                     @eliminar="eliminarEmpresa(empresa.id)"
                   />
                 </td>
               </tr>
 
+              <!-- Fila Expandible (Acordeón) con Sucursales -->
+              <tr v-if="expandedRowIds.includes(empresa.id)" class="bg-surface">
+                <td colspan="7" class="p-0 border-b border-border">
+                  <div class="px-10 py-4 bg-linear-to-r from-slate-50 to-white border-l-4 border-l-blue-500">
+                    <div class="flex justify-between items-center mb-3">
+                      <h4 class="text-[12px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[16px] text-slate-400">storefront</span>
+                        Sucursales / Sedes de {{ empresa.nombre }}
+                      </h4>
+                      <button 
+                        type="button" 
+                        @click="abrirModalSucursal(empresa.id)"
+                        class="h-6 px-2 bg-white border border-slate-300 rounded text-slate-700 flex items-center gap-1 hover:bg-slate-50 hover:border-blue-500 hover:text-blue-600 transition-colors text-[11px] font-medium shadow-sm cursor-pointer"
+                      >
+                        <span class="material-symbols-outlined text-[14px]">add</span>
+                        <span>Sucursal</span>
+                      </button>
+                    </div>
 
+                    <!-- TablaSucursales con botón de drill-down a Bodegas -->
+                    <TablaSucursales :empresa-id="empresa.id" />
+                  </div>
+                </td>
+              </tr>
             </template>
             
             <tr v-if="!empresas || empresas.length === 0">
@@ -191,14 +254,3 @@ const eliminarEmpresa = async (empresaId: string) => {
     </div>
   </div>
 </template>
-
-
-
-
-
-
-
-
-
-
-

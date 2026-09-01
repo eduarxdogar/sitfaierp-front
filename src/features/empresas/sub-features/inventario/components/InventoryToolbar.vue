@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -41,7 +41,7 @@ const updateEstado = (event: Event) => {
         v-model="localSearch"
         @keyup.enter="executeSearch"
         autofocus
-        placeholder="Buscar por SKU, cÃ³digo de barras o descripción..."
+        placeholder="Buscar por SKU, código de barras o descripción..."
         class="w-full pl-9 pr-8 py-2 text-xs border border-surface-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none placeholder-surface-400 text-surface-900" 
       />
       <button
@@ -57,7 +57,7 @@ const updateEstado = (event: Event) => {
     <div class="flex flex-wrap items-center gap-2.5">
       <!-- Categoría -->
       <div class="relative">
-        <label for="inv-cat-select" class="sr-only">Filtrar por categorÃ­a</label>
+        <label for="inv-cat-select" class="sr-only">Filtrar por categoría</label>
         <select
           id="inv-cat-select"
           :value="categoriaSeleccionada"
@@ -90,7 +90,7 @@ const updateEstado = (event: Event) => {
         <span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
       </div>
 
-      <!-- BotÃ³n de Actualizar / Refrescar -->
+      <!-- Botón de Actualizar / Refrescar -->
       <button
         id="btn-sync-inventario"
         type="button"
