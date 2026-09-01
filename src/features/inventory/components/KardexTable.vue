@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import type { ProductoInventario } from '../dto/inventory.dto';
 import { EstadoStock } from '../dto/inventory.dto';
 
@@ -38,9 +38,9 @@ const getEstadoClasses = (estado: EstadoStock) => {
     <table class="w-full text-left text-xs text-surface-700">
       <thead class="bg-surface-100/80 text-surface-600 font-semibold border-b border-surface-200 uppercase tracking-wider text-[11px]">
         <tr>
-          <th scope="col" class="px-4 py-3">SKU / CÓDIGO</th>
-          <th scope="col" class="px-4 py-3">PRODUCTO / DESCRIPCIÓN</th>
-          <th scope="col" class="px-4 py-3">CATEGORÍA</th>
+          <th scope="col" class="px-4 py-3">SKU / CÃ“DIGO</th>
+          <th scope="col" class="px-4 py-3">PRODUCTO / DESCRIPCIÃ“N</th>
+          <th scope="col" class="px-4 py-3">CATEGORÃA</th>
           <th scope="col" class="px-3 py-3 text-center">U.M.</th>
           <th scope="col" class="px-4 py-3 text-right">STOCK ACTUAL</th>
           <th scope="col" class="px-4 py-3 text-right">VALORIZADO (COSTO)</th>
@@ -52,7 +52,7 @@ const getEstadoClasses = (estado: EstadoStock) => {
         <template v-if="productos.length > 0">
           <tr v-for="item in productos" :key="item.id" class="hover:bg-surface-50/80 transition-colors group">
             
-            <!-- SKU & Código de Barras -->
+            <!-- SKU & CÃ³digo de Barras -->
             <td class="px-4 py-3 font-mono">
               <button
                 type="button"
@@ -61,7 +61,7 @@ const getEstadoClasses = (estado: EstadoStock) => {
                 {{ item.sku }}
               </button>
               <div class="text-[10px] text-surface-400 font-sans flex items-center mt-0.5">
-                <span class="material-icons text-[11px] mr-1 text-surface-400">qr_code</span>
+                <span class="material-symbols-outlined text-[11px] mr-1 text-surface-400">qr_code</span>
                 {{ item.codigoBarras }}
               </div>
             </td>
@@ -70,12 +70,12 @@ const getEstadoClasses = (estado: EstadoStock) => {
             <td class="px-4 py-3">
               <div class="font-medium text-surface-900 leading-snug">{{ item.nombre }}</div>
               <div class="text-[11px] text-surface-400 flex items-center mt-0.5">
-                <span class="material-icons text-[12px] mr-1 text-surface-400">place</span>
+                <span class="material-symbols-outlined text-[12px] mr-1 text-surface-400">place</span>
                 Pasillo: <span class="font-medium text-surface-600 ml-1">{{ item.ubicacionPasillo }}</span>
               </div>
             </td>
 
-            <!-- Categoría -->
+            <!-- CategorÃ­a -->
             <td class="px-4 py-3">
               <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-100 text-surface-700 border border-surface-200">
                 {{ item.categoria }}
@@ -95,7 +95,7 @@ const getEstadoClasses = (estado: EstadoStock) => {
                 {{ new Intl.NumberFormat('en-US').format(item.stockActual) }}
               </div>
               <div class="text-[10px] text-surface-400">
-                Mín: {{ item.stockMinimo }} | Seg: {{ item.stockSeguridad }}
+                MÃ­n: {{ item.stockMinimo }} | Seg: {{ item.stockSeguridad }}
               </div>
             </td>
 
@@ -127,14 +127,14 @@ const getEstadoClasses = (estado: EstadoStock) => {
                   @click="emit('view-kardex', item)"
                   class="p-1.5 rounded-md text-surface-500 hover:text-primary-600 hover:bg-primary-50 transition-colors"
                   title="Ver Historial Kardex">
-                  <span class="material-icons text-[18px]">history</span>
+                  <span class="material-symbols-outlined text-[18px]">history</span>
                 </button>
                 <button
                   type="button"
                   @click="emit('quick-move', item)"
                   class="p-1.5 rounded-md text-surface-500 hover:text-emerald-600 hover:bg-emerald-50 transition-colors"
-                  title="Movimiento rápido (+/-)">
-                  <span class="material-icons text-[18px]">add_circle_outline</span>
+                  title="Movimiento rÃ¡pido (+/-)">
+                  <span class="material-symbols-outlined text-[18px]">add_circle_outline</span>
                 </button>
               </div>
             </td>
@@ -145,9 +145,9 @@ const getEstadoClasses = (estado: EstadoStock) => {
           <tr>
             <td colspan="8" class="px-4 py-12 text-center text-surface-500">
               <div class="flex flex-col items-center justify-center">
-                <span class="material-icons text-surface-300 text-4xl mb-2">search_off</span>
+                <span class="material-symbols-outlined text-surface-300 text-4xl mb-2">search_off</span>
                 <p class="font-medium text-surface-700">No se encontraron productos en esta bodega</p>
-                <p class="text-xs text-surface-400 mt-1">Pruebe ajustando los términos de búsqueda o filtros de categoría.</p>
+                <p class="text-xs text-surface-400 mt-1">Pruebe ajustando los tÃ©rminos de bÃºsqueda o filtros de categorÃ­a.</p>
               </div>
             </td>
           </tr>

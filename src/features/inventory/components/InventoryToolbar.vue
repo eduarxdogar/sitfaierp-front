@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -31,17 +31,17 @@ const updateEstado = (event: Event) => {
 
 <template>
   <div class="p-4 bg-surface-50/40 border-b border-surface-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
-    <!-- Búsqueda por SKU o Nombre -->
+    <!-- BÃºsqueda por SKU o Nombre -->
     <div class="flex-1 max-w-md relative">
-      <label for="inv-search-input" class="sr-only">Buscar por SKU o descripción</label>
-      <span class="material-icons absolute left-3 top-2.5 text-[18px] text-surface-400">search</span>
+      <label for="inv-search-input" class="sr-only">Buscar por SKU o descripciÃ³n</label>
+      <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-surface-400">search</span>
       <input
         id="inv-search-input"
         type="text"
         v-model="localSearch"
         @keyup.enter="executeSearch"
         autofocus
-        placeholder="Buscar por SKU, código de barras o descripción..."
+        placeholder="Buscar por SKU, cÃ³digo de barras o descripciÃ³n..."
         class="w-full pl-9 pr-8 py-2 text-xs border border-surface-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none placeholder-surface-400 text-surface-900" 
       />
       <button
@@ -49,29 +49,29 @@ const updateEstado = (event: Event) => {
         type="button"
         @click="localSearch = ''; executeSearch()"
         class="absolute right-2.5 top-2 text-surface-400 hover:text-surface-600">
-        <span class="material-icons text-[18px]">clear</span>
+        <span class="material-symbols-outlined text-[18px]">clear</span>
       </button>
     </div>
 
     <!-- Filtros desplegables -->
     <div class="flex flex-wrap items-center gap-2.5">
-      <!-- Categoría -->
+      <!-- CategorÃ­a -->
       <div class="relative">
-        <label for="inv-cat-select" class="sr-only">Filtrar por categoría</label>
+        <label for="inv-cat-select" class="sr-only">Filtrar por categorÃ­a</label>
         <select
           id="inv-cat-select"
           :value="categoriaSeleccionada"
           @change="updateCategoria"
           class="pl-3 pr-8 py-2 text-xs border border-surface-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none appearance-none cursor-pointer text-surface-700 font-medium">
-          <option value="ALL">Todas las Categorías</option>
+          <option value="ALL">Todas las CategorÃ­as</option>
           <option value="Snacks y Golosinas">Snacks y Golosinas</option>
           <option value="Abarrotes y Granos">Abarrotes y Granos</option>
           <option value="Aceites y Grasas">Aceites y Grasas</option>
-          <option value="Lácteos y Derivados">Lácteos y Derivados</option>
+          <option value="LÃ¡cteos y Derivados">LÃ¡cteos y Derivados</option>
           <option value="Limpieza y Cuidado">Limpieza y Cuidado</option>
-          <option value="Bebidas y Líquidos">Bebidas y Líquidos</option>
+          <option value="Bebidas y LÃ­quidos">Bebidas y LÃ­quidos</option>
         </select>
-        <span class="material-icons absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
+        <span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
       </div>
 
       <!-- Filtro Estado Stock -->
@@ -83,21 +83,21 @@ const updateEstado = (event: Event) => {
           @change="updateEstado"
           class="pl-3 pr-8 py-2 text-xs border border-surface-300 rounded-lg bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none appearance-none cursor-pointer text-surface-700 font-medium">
           <option value="ALL">Todos los Estados</option>
-          <option value="Óptimo">Óptimo</option>
+          <option value="Ã“ptimo">Ã“ptimo</option>
           <option value="Bajo Stock">Bajo Stock</option>
-          <option value="Crítico">Crítico</option>
+          <option value="CrÃ­tico">CrÃ­tico</option>
         </select>
-        <span class="material-icons absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
+        <span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
       </div>
 
-      <!-- Botón de Actualizar / Refrescar -->
+      <!-- BotÃ³n de Actualizar / Refrescar -->
       <button
         id="btn-sync-inventario"
         type="button"
         @click="$emit('refresh')"
         class="p-2 text-surface-500 hover:text-primary-600 bg-white border border-surface-300 rounded-lg hover:bg-surface-50 transition-colors"
         title="Refrescar existencias">
-        <span class="material-icons text-[18px]">sync</span>
+        <span class="material-symbols-outlined text-[18px]">sync</span>
       </button>
     </div>
   </div>

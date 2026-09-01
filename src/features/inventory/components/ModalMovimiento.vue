@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -67,7 +67,7 @@ const onSubmit = handleSubmit((values) => {
         <div class="flex items-center space-x-3">
           <div class="h-9 w-9 rounded-lg flex items-center justify-center text-white"
             :class="tipoMov === TipoMovimiento.INGRESO ? 'bg-emerald-600' : 'bg-red-600'">
-            <span class="material-icons text-[20px]">
+            <span class="material-symbols-outlined text-[20px]">
               {{ tipoMov === TipoMovimiento.INGRESO ? 'add_shopping_cart' : 'remove_shopping_cart' }}
             </span>
           </div>
@@ -84,7 +84,7 @@ const onSubmit = handleSubmit((values) => {
           type="button"
           @click="emit('close')"
           class="text-surface-400 hover:text-surface-600 rounded-lg p-1.5 hover:bg-surface-200 transition-colors">
-          <span class="material-icons text-[20px]">close</span>
+          <span class="material-symbols-outlined text-[20px]">close</span>
         </button>
       </div>
 
@@ -94,11 +94,11 @@ const onSubmit = handleSubmit((values) => {
         <!-- Selector de Tipo de Movimiento -->
         <div>
           <span class="block text-xs font-semibold text-surface-700 mb-2">
-            Tipo de Operación <span class="text-red-500">*</span>
+            Tipo de OperaciÃ³n <span class="text-red-500">*</span>
           </span>
           <div class="grid grid-cols-2 gap-3">
             
-            <!-- Opción Ingreso (Verde) -->
+            <!-- OpciÃ³n Ingreso (Verde) -->
             <label
               for="radio-ingreso"
               class="flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
@@ -117,11 +117,11 @@ const onSubmit = handleSubmit((values) => {
                 <div class="text-xs font-bold" :class="tipoMov === TipoMovimiento.INGRESO ? 'text-emerald-900' : 'text-surface-700'">
                   + INGRESO DE STOCK
                 </div>
-                <span class="text-[11px] text-surface-500">Compra, recepción o ajuste (+)</span>
+                <span class="text-[11px] text-surface-500">Compra, recepciÃ³n o ajuste (+)</span>
               </div>
             </label>
 
-            <!-- Opción Egreso (Rojo) -->
+            <!-- OpciÃ³n Egreso (Rojo) -->
             <label
               for="radio-egreso"
               class="flex items-center space-x-3 p-3 rounded-lg border-2 cursor-pointer transition-all"
@@ -153,7 +153,7 @@ const onSubmit = handleSubmit((values) => {
             Producto / SKU <span class="text-red-500">*</span>
           </label>
           <div class="relative">
-            <span class="material-icons absolute left-3 top-2.5 text-[18px] text-surface-400">inventory_2</span>
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-surface-400">inventory_2</span>
             <select
               id="mov-producto-select"
               v-model="productoId"
@@ -164,7 +164,7 @@ const onSubmit = handleSubmit((values) => {
                 {{ prod.sku }} - {{ prod.nombre }} (Stock actual: {{ prod.stockActual }} {{ prod.unidadMedida }})
               </option>
             </select>
-            <span class="material-icons absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
+            <span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
           </div>
           <span v-if="errorProducto" class="text-red-500 text-xs mt-1">{{ errorProducto }}</span>
         </div>
@@ -196,7 +196,7 @@ const onSubmit = handleSubmit((values) => {
           <!-- Motivo -->
           <div>
             <label for="mov-motivo-select" class="block text-xs font-semibold text-surface-700 mb-1">
-              Motivo de la Operación <span class="text-red-500">*</span>
+              Motivo de la OperaciÃ³n <span class="text-red-500">*</span>
             </label>
             <div class="relative">
               <select
@@ -207,19 +207,19 @@ const onSubmit = handleSubmit((values) => {
                 <option value="" disabled>Seleccione motivo</option>
                 <template v-if="tipoMov === TipoMovimiento.INGRESO">
                   <option value="Compra a Proveedor">Compra a Proveedor (Factura)</option>
-                  <option value="Devolución de Cliente">Devolución de Cliente</option>
+                  <option value="DevoluciÃ³n de Cliente">DevoluciÃ³n de Cliente</option>
                   <option value="Transferencia entre Bodegas">Transferencia desde otra Bodega</option>
                   <option value="Ajuste de Inventario (+)">Ajuste / Sobrante de Inventario</option>
                 </template>
                 <template v-else>
                   <option value="Despacho por Venta">Despacho por Venta / POS</option>
                   <option value="Merma por Vencimiento">Merma o Producto Vencido</option>
-                  <option value="Avería o Daño Físico">Avería o Daño de Empaque</option>
+                  <option value="AverÃ­a o DaÃ±o FÃ­sico">AverÃ­a o DaÃ±o de Empaque</option>
                   <option value="Transferencia de Salida">Transferencia a otra Sucursal</option>
                   <option value="Consumo Interno">Consumo Interno / Muestras</option>
                 </template>
               </select>
-              <span class="material-icons absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
+              <span class="material-symbols-outlined absolute right-2.5 top-2 text-[18px] text-surface-400 pointer-events-none">expand_more</span>
             </div>
             <span v-if="errorMotivo" class="text-red-500 text-xs mt-1">{{ errorMotivo }}</span>
           </div>
@@ -230,7 +230,7 @@ const onSubmit = handleSubmit((values) => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="mov-doc-ref" class="block text-xs font-semibold text-surface-700 mb-1">
-              Doc. de Referencia (Guía / Factura)
+              Doc. de Referencia (GuÃ­a / Factura)
             </label>
             <input
               id="mov-doc-ref"
@@ -256,7 +256,7 @@ const onSubmit = handleSubmit((values) => {
         <!-- Preview del Impacto en Stock -->
         <div v-if="selectedProduct" class="p-3 rounded-lg border border-surface-200 bg-surface-50 text-xs space-y-1 mt-4">
           <div class="font-semibold text-surface-800 flex items-center justify-between">
-            <span>Simulación de Impacto en Kardex:</span>
+            <span>SimulaciÃ³n de Impacto en Kardex:</span>
             <span class="text-primary-700">{{ selectedProduct.sku }}</span>
           </div>
           <div class="flex items-center justify-between text-surface-600 pt-1">
@@ -285,7 +285,7 @@ const onSubmit = handleSubmit((values) => {
             :disabled="isSubmitting"
             class="px-5 py-2 text-xs font-semibold text-white rounded-lg transition-colors shadow-sm flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             :class="tipoMov === TipoMovimiento.INGRESO ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-red-600 hover:bg-red-700'">
-            <span class="material-icons text-[18px] mr-1.5">check_circle</span>
+            <span class="material-symbols-outlined text-[18px] mr-1.5">check_circle</span>
             Confirmar {{ tipoMov === TipoMovimiento.INGRESO ? 'Ingreso' : 'Egreso' }}
           </button>
         </div>

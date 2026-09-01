@@ -17,15 +17,17 @@ const emit = defineEmits<{
 }>();
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const MODULOS = [
-  'Dashboard',
-  'Gestión de Empresas',
-  'IAM (Usuarios y Roles)',
-  'Ventas y Pedidos',
-  'Inventario y Almacenes',
-  'Facturación Electrónica',
-  'Punto de Venta (POS)',
-];
+const moduloMap: Record<string, string> = {
+  'DASHBOARD': 'Dashboard',
+  'EMPRESAS': 'Gestión de Empresas',
+  'IAM': 'IAM (Usuarios y Roles)',
+  'VENTAS_PEDIDOS': 'Ventas y Pedidos',
+  'INVENTARIO': 'Inventario y Almacenes',
+  'FACTURACION': 'Facturación Electrónica',
+  'POS': 'Punto de Venta (POS)'
+};
+
+const MODULOS = Object.values(moduloMap);
 
 const ACCIONES = ['LEER', 'CREAR', 'EDITAR', 'ELIMINAR', 'EXPORTAR'];
 
@@ -67,11 +69,12 @@ watch(
           descripcion: rol.descripcion || '',
         },
       });
-      // Mapear los permisos del backend a la matriz
+      // Mapear los permisos del backend a la matriz usando el diccionario
       if (rol.permisos) {
         rol.permisos.forEach((p) => {
-          if (nuevaMatriz[p.modulo]) {
-            p.acciones.forEach((a) => nuevaMatriz[p.modulo]!.add(a));
+          const uiName = moduloMap[p.modulo] || p.modulo;
+          if (nuevaMatriz[uiName]) {
+            p.acciones.forEach((a) => nuevaMatriz[uiName]!.add(a));
           }
         });
       }
@@ -122,10 +125,16 @@ function toggleRowAll(modulo: string, event: Event) {
 const onSubmit = handleSubmit((values) => {
   const permisosMapped: PermisoModulo[] = [];
   
+  // Invertir el mapeo para enviar el Enum correcto al backend
+  const reverseMap: Record<string, string> = Object.entries(moduloMap).reduce((acc, [key, val]) => {
+    acc[val] = key;
+    return acc;
+  }, {} as Record<string, string>);
+  
   for (const [modulo, setAcciones] of Object.entries(matrizPermisos.value)) {
     if (setAcciones.size > 0) {
       permisosMapped.push({
-        modulo,
+        modulo: reverseMap[modulo] || modulo,
         acciones: Array.from(setAcciones),
       });
     }
