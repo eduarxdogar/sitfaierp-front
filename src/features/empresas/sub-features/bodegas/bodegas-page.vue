@@ -1,6 +1,6 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
-import { useToast } from '../../shared/composables/use-toast';
+import { useToast } from '../../../../shared/composables/use-toast';
 import { useRoute } from 'vue-router';
 import { useBodegas } from './composables/useBodegas';
 import ModalNuevaBodega from './components/ModalNuevaBodega.vue';
@@ -11,8 +11,8 @@ const isModalOpen = ref(false);
 const toast = useToast();
 const route = useRoute();
 
-const selectedSucursalId = ref<string>((route.query.sucursalId as string) || '00000000-0000-0000-0000-000000000000');
-const selectedEmpresaId = ref<string>((route.query.empresaId as string) || '00000000-0000-0000-0000-000000000000');
+const selectedSucursalId = ref<string>((route.params.sucursalId as string) || '00000000-0000-0000-0000-000000000000');
+const selectedEmpresaId = ref<string>((route.params.empresaId as string) || '00000000-0000-0000-0000-000000000000');
 const { crearBodegaMutation, obtenerBodegas } = useBodegas(selectedSucursalId, selectedEmpresaId);
 const { isError, error: fetchError } = obtenerBodegas;
 const { isPending: isCreating } = crearBodegaMutation;
@@ -44,6 +44,22 @@ const crearBodega = async (payload: Omit<CrearBodegaRequest, 'sucursalId'>) => {
     <!-- Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
+        <nav class="flex items-center space-x-2 text-xs text-slate-500 mb-2 font-medium">
+          <router-link to="/empresas" class="hover:text-blue-600 transition-colors flex items-center">
+            <span class="material-symbols-outlined text-[15px] mr-1 text-slate-400">home</span>
+            Empresas
+          </router-link>
+          <span class="text-slate-300">/</span>
+          <router-link :to="`/empresas/${selectedEmpresaId}/sucursales`" class="hover:text-blue-600 transition-colors flex items-center">
+            <span class="material-symbols-outlined text-[15px] mr-1 text-slate-400">storefront</span>
+            Sucursales
+          </router-link>
+          <span class="text-slate-300">/</span>
+          <span class="text-blue-700 font-semibold bg-blue-50 px-2 py-0.5 rounded border border-blue-100 flex items-center">
+            <span class="material-symbols-outlined text-[14px] mr-1 text-blue-600">warehouse</span>
+            Bodegas de Sucursal {{ selectedSucursalId }}
+          </span>
+        </nav>
         <h2 class="text-[20px] font-extrabold text-[#0b1c30] tracking-tight">Directorio de Bodegas</h2>
         <p class="text-[12px] text-slate-500 font-medium mt-0.5">Gestión y control de inventarios, almacenes y centros de distribución</p>
       </div>

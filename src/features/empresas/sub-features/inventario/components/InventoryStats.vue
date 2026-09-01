@@ -11,7 +11,7 @@ const categoriasActivas = computed(() => new Set(props.productos.map(p => p.cate
 const unidadesFisicas = computed(() => props.productos.reduce((sum, p) => sum + p.stockActual, 0));
 const valorizadoTotal = computed(() => props.productos.reduce((sum, p) => sum + p.valorizado, 0));
 const precioVentaTotal = computed(() => props.productos.reduce((sum, p) => sum + (p.precioVenta * p.stockActual), 0));
-const alertasStock = computed(() => props.productos.filter(p => p.estado === 'Bajo Stock' || p.estado === 'CrÃ­tico').length);
+const alertasStock = computed(() => props.productos.filter(p => p.estado === 'Bajo Stock' || p.estado === 'Crítico').length);
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);

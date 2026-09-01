@@ -94,7 +94,7 @@ const onSubmit = handleSubmit((values) => {
         <!-- Selector de Tipo de Movimiento -->
         <div>
           <span class="block text-xs font-semibold text-surface-700 mb-2">
-            Tipo de OperaciÃ³n <span class="text-red-500">*</span>
+            Tipo de Operación <span class="text-red-500">*</span>
           </span>
           <div class="grid grid-cols-2 gap-3">
             
@@ -196,7 +196,7 @@ const onSubmit = handleSubmit((values) => {
           <!-- Motivo -->
           <div>
             <label for="mov-motivo-select" class="block text-xs font-semibold text-surface-700 mb-1">
-              Motivo de la OperaciÃ³n <span class="text-red-500">*</span>
+              Motivo de la Operación <span class="text-red-500">*</span>
             </label>
             <div class="relative">
               <select
@@ -207,14 +207,14 @@ const onSubmit = handleSubmit((values) => {
                 <option value="" disabled>Seleccione motivo</option>
                 <template v-if="tipoMov === TipoMovimiento.INGRESO">
                   <option value="Compra a Proveedor">Compra a Proveedor (Factura)</option>
-                  <option value="DevoluciÃ³n de Cliente">DevoluciÃ³n de Cliente</option>
+                  <option value="Devolución de Cliente">Devolución de Cliente</option>
                   <option value="Transferencia entre Bodegas">Transferencia desde otra Bodega</option>
                   <option value="Ajuste de Inventario (+)">Ajuste / Sobrante de Inventario</option>
                 </template>
                 <template v-else>
                   <option value="Despacho por Venta">Despacho por Venta / POS</option>
                   <option value="Merma por Vencimiento">Merma o Producto Vencido</option>
-                  <option value="AverÃ­a o DaÃ±o FÃ­sico">AverÃ­a o DaÃ±o de Empaque</option>
+                  <option value="Avería o Daño FÃ­sico">Avería o Daño de Empaque</option>
                   <option value="Transferencia de Salida">Transferencia a otra Sucursal</option>
                   <option value="Consumo Interno">Consumo Interno / Muestras</option>
                 </template>
@@ -230,7 +230,7 @@ const onSubmit = handleSubmit((values) => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="mov-doc-ref" class="block text-xs font-semibold text-surface-700 mb-1">
-              Doc. de Referencia (GuÃ­a / Factura)
+              Doc. de Referencia (Guía / Factura)
             </label>
             <input
               id="mov-doc-ref"
@@ -256,7 +256,7 @@ const onSubmit = handleSubmit((values) => {
         <!-- Preview del Impacto en Stock -->
         <div v-if="selectedProduct" class="p-3 rounded-lg border border-surface-200 bg-surface-50 text-xs space-y-1 mt-4">
           <div class="font-semibold text-surface-800 flex items-center justify-between">
-            <span>SimulaciÃ³n de Impacto en Kardex:</span>
+            <span>Simulación de Impacto en Kardex:</span>
             <span class="text-primary-700">{{ selectedProduct.sku }}</span>
           </div>
           <div class="flex items-center justify-between text-surface-600 pt-1">

@@ -32,16 +32,22 @@ const protectedRoutes = [
         meta: { key: "dashboard" },
       },
       {
-        path: "/empresas",
-        name: "empresas",
-        component: () => import("@features/empresas/empresas-page.vue"),
-        meta: { key: "empresas", allowedRoles: ['SUPER_ADMIN'] },
+        path: '/empresas',
+        name: 'empresas',
+        component: () => import('@features/empresas/empresas-page.vue'),
+        meta: { key: 'empresas', allowedRoles: ['SUPER_ADMIN'] },
       },
       {
-        path: "/bodegas",
-        name: "bodegas",
-        component: () => import("@features/bodegas/bodegas-page.vue"),
-        meta: { key: "bodegas", allowedRoles: ['SUPER_ADMIN'] },
+        path: '/empresas/:empresaId/sucursales',
+        name: 'sucursales',
+        component: () => import('@features/empresas/sub-features/sucursales/sucursales-page.vue'),
+        meta: { key: 'empresas', allowedRoles: ['SUPER_ADMIN'] },
+      },
+      {
+        path: '/empresas/:empresaId/sucursales/:sucursalId/bodegas',
+        name: 'bodegas',
+        component: () => import('@features/empresas/sub-features/bodegas/bodegas-page.vue'),
+        meta: { key: 'empresas', allowedRoles: ['SUPER_ADMIN'] },
       },
       {
         path: '/productos',
@@ -56,9 +62,9 @@ const protectedRoutes = [
         meta: { key: 'iam', allowedRoles: ['SUPER_ADMIN'] },
       },
       {
-        path: '/inventario',
+        path: '/empresas/:empresaId/sucursales/:sucursalId/bodegas/:bodegaId/inventario',
         name: 'inventario',
-        component: () => import('@features/inventory/inventory-page.vue'),
+        component: () => import('@features/empresas/sub-features/inventario/inventory-page.vue'),
         meta: { key: 'inventario', allowedRoles: ['SUPER_ADMIN', 'BODEGA_OPERATOR'] },
       },
       {

@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import type { UsuarioResponse, EstadoUsuario } from '../dto/iam.dto';
 import keycloak from '@/shared/services/auth/keycloak.client';
-import { useSucursales } from '../../empresas/composables/useSucursales';
+import { useSucursales } from '../../empresas/sub-features/sucursales/useSucursales';
 
 // ─── Props & Emits ────────────────────────────────────────────────────────────
 const props = defineProps<{
@@ -21,12 +21,11 @@ const tenantId = computed(() => (keycloak.tokenParsed as any)?.empresa_id || '')
 const { obtenerSucursales } = useSucursales(tenantId);
 const sucursales = obtenerSucursales.data;
 
-function getSucursalName(idOrName?: string): string {
-  if (!idOrName) return 'Sede Central';
-  if (!sucursales.value) return idOrName; // fallback while loading
-  const match = sucursales.value.find((s) => s.id === idOrName);
-  return match ? match.nombre : idOrName;
-}
+const getSucursalNombre = (usuario: UsuarioResponse) => {
+  if (!usuario.sucursal) return '-';
+  const suc = sucursales.value?.find((s: any) => s.id === usuario.sucursal);
+  return suc ? suc.nombre : 'Cargando...';
+};
 
 function getEstadoClasses(estado: EstadoUsuario): string {
   switch (estado) {
@@ -130,7 +129,7 @@ function formatDate(iso?: string): { date: string; time: string } | null {
             <div class="font-medium text-text-main">{{ usuario.empresa }}</div>
             <div class="text-xs text-text-muted flex items-center mt-0.5">
               <span class="material-symbols-outlined text-[13px] mr-1">location_on</span>
-              {{ getSucursalName(usuario.sucursal) }}
+              {{ getSucursalNombre(usuario) }}
             </div>
           </td>
 

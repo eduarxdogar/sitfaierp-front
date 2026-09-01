@@ -1,8 +1,8 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm } from 'vee-validate';
-import { crearSucursalSchema } from '../schema/sucursales.schema';
-import type { CrearSucursalRequest } from '../dto/sucursales.dto';
+import { crearSucursalSchema } from './sucursales.schema';
+import type { CrearSucursalRequest } from './sucursales.dto';
 
 const props = defineProps<{
   isLoading?: boolean;

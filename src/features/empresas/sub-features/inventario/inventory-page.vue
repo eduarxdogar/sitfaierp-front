@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useInventory } from './composables/useInventory';
@@ -9,8 +9,9 @@ import ModalMovimiento from './components/ModalMovimiento.vue';
 import type { ProductoInventario } from './dto/inventory.dto';
 
 const route = useRoute();
-const bodegaId = computed(() => route.query.bodegaId as string || 'BOD-01');
-const sucursalId = computed(() => route.query.sucursalId as string || 'SUC-01');
+const empresaId = computed(() => route.params.empresaId as string || 'EMP-01');
+const sucursalId = computed(() => route.params.sucursalId as string || 'SUC-01');
+const bodegaId = computed(() => route.params.bodegaId as string || 'BOD-01');
 
 const { obtenerInventario, registrarMovimientoMutation, obtenerKardex } = useInventory(sucursalId, bodegaId);
 const { data: productos, isPending, refetch } = obtenerInventario;
@@ -80,18 +81,21 @@ const openKardex = (producto: ProductoInventario) => {
     <!-- Breadcrumb Navigation & Top Action Bar -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <nav class="flex items-center space-x-2 text-xs text-surface-500 mb-1.5 font-medium" aria-label="Ruta de navegaciÃ³n">
-          <span class="hover:text-primary-600 cursor-pointer flex items-center">
+        <nav class="flex items-center space-x-2 text-xs text-surface-500 mb-1.5 font-medium" aria-label="Ruta de navegación">
+          <router-link to="/empresas" class="hover:text-primary-600 cursor-pointer flex items-center transition-colors">
             <span class="material-symbols-outlined text-[15px] mr-1 text-surface-400">home</span>
-            SITFAI
-          </span>
+            Empresas
+          </router-link>
           <span class="text-surface-300">/</span>
-          <span class="hover:text-primary-600 cursor-pointer flex items-center">
+          <router-link :to="`/empresas/${empresaId}/sucursales`" class="hover:text-primary-600 cursor-pointer flex items-center transition-colors">
+            <span class="material-symbols-outlined text-[15px] mr-1 text-surface-400">domain</span>
+            Empresa {{ empresaId }}
+          </router-link>
+          <span class="text-surface-300">/</span>
+          <router-link :to="`/empresas/${empresaId}/sucursales/${sucursalId}/bodegas`" class="hover:text-primary-600 cursor-pointer flex items-center transition-colors">
             <span class="material-symbols-outlined text-[15px] mr-1 text-surface-400">store</span>
-            Sucursal
-          </span>
-          <span class="text-surface-300">/</span>
-          <span class="hover:text-primary-600 cursor-pointer">{{ sucursalId }}</span>
+            Sucursal {{ sucursalId }}
+          </router-link>
           <span class="text-surface-300">/</span>
           <span class="text-primary-700 font-semibold bg-primary-50 px-2 py-0.5 rounded border border-primary-100 flex items-center">
             <span class="material-symbols-outlined text-[14px] mr-1 text-primary-600">warehouse</span>
@@ -109,7 +113,7 @@ const openKardex = (producto: ProductoInventario) => {
           </span>
         </div>
         <p class="text-xs text-surface-500 mt-0.5">
-          Existencias fÃ­sicas valorizadas en tiempo real, trazabilidad por SKU y registro de movimientos de almacÃ©n.
+          Existencias fÃ­sicas valorizadas en tiempo real, trazabilidad por SKU y registro de movimientos de almacén.
         </p>
       </div>
 
@@ -124,7 +128,7 @@ const openKardex = (producto: ProductoInventario) => {
         <button
           type="button"
           @click="openModalMovimiento()"
-          class="px-4 py-2 text-xs font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-colors shadow-sm flex items-center cursor-pointer">
+          class="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded shadow flex items-center font-semibold text-xs transition-colors cursor-pointer">
           <span class="material-symbols-outlined text-[18px] mr-1.5">swap_horiz</span>
           + Registrar Movimiento
         </button>
@@ -213,7 +217,7 @@ const openKardex = (producto: ProductoInventario) => {
               <thead class="bg-surface-100 text-surface-700 font-bold border-b border-surface-200 uppercase">
                 <tr>
                   <th class="px-3 py-2">Fecha</th>
-                  <th class="px-3 py-2">OperaciÃ³n</th>
+                  <th class="px-3 py-2">Operación</th>
                   <th class="px-3 py-2">Motivo / Doc</th>
                   <th class="px-3 py-2 text-right">Cantidad</th>
                   <th class="px-3 py-2 text-right">Saldo</th>

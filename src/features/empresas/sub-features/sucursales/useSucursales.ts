@@ -1,12 +1,12 @@
 import { useSimpleQueryHook } from '@/shared/hooks/tanstack/use-simple-query.hook';
 import { useSimpleMutationHook } from '@/shared/hooks/tanstack/use-simple-mutation.hook';
-import { SUCURSALES_ENDPOINTS, SUCURSALES_KEYS } from '../constants/sucursales.keys';
-import { EMPRESAS_KEYS } from '../constants/empresas.keys';
-import type { SucursalResponse } from '../dto/empresas.dto';
-import type { CrearSucursalRequest } from '../dto/sucursales.dto';
+import { SUCURSALES_ENDPOINTS, SUCURSALES_KEYS } from './sucursales.keys';
+import type { SucursalResponse } from '../../dto/empresas.dto';
+import type { CrearSucursalRequest } from './sucursales.dto';
 import type { MaybeRefOrGetter } from 'vue';
 import { toValue } from 'vue';
 import { useQueryClient } from '@tanstack/vue-query';
+import { EMPRESAS_KEYS } from '../../constants/empresas.keys';
 
 export function useSucursales(empresaId: MaybeRefOrGetter<string | null>) {
   const queryClient = useQueryClient();

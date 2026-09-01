@@ -1,7 +1,9 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { useBodegas } from '../composables/useBodegas';
 
 const props = defineProps<{ sucursalId: string }>();
+const route = useRoute();
 const { obtenerBodegas } = useBodegas(() => props.sucursalId);
 const { data: bodegas, isLoading, isError } = obtenerBodegas;
 </script>
@@ -29,6 +31,7 @@ const { data: bodegas, isLoading, isError } = obtenerBodegas;
             <th class="py-2 px-3">CÓDIGO</th>
             <th class="py-2 px-3">NOMBRE</th>
             <th class="py-2 px-3 w-24 text-center">ESTADO</th>
+            <th class="py-2 px-3 w-24 text-center">ACCIONES</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-100">
@@ -41,6 +44,11 @@ const { data: bodegas, isLoading, isError } = obtenerBodegas;
                 <span :class="['ACTIVO', 'ACTIVA'].includes(bodega.activa ? 'ACTIVO' : 'INACTIVO'.toUpperCase()) ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full text-[10px] font-bold' : 'text-red-700 bg-red-100 px-2 py-0.5 rounded-full text-[10px] font-bold'">
                   {{ ['ACTIVO', 'ACTIVA'].includes(bodega.activa ? 'ACTIVO' : 'INACTIVO'.toUpperCase()) ? 'Activo' : 'Inactivo' }}
                 </span>
+              </td>
+              <td class="py-2 px-3 text-center">
+                <button @click.prevent="$router.push(`/empresas/${route.params.empresaId}/sucursales/${props.sucursalId}/bodegas/${bodega.id}/inventario`)" class="text-slate-400 hover:text-blue-600 p-1 cursor-pointer mr-1" title="Ver Inventario">
+                  <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+                </button>
               </td>
             </tr>
           </template>

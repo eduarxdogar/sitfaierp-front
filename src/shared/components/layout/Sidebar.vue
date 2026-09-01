@@ -11,7 +11,7 @@ const navItems = ref([
   { id: 'iam', label: 'Identidad y Accesos (IAM)', icon: 'shield_person', route: '/iam', allowedRoles: ['SUPER_ADMIN'] },
   { id: 'tenant-branches', label: 'Gestión de Empresas', icon: 'domain', route: '/empresas', allowedRoles: ['SUPER_ADMIN'] },
   { id: 'sales', label: 'Órdenes y Ventas', icon: 'receipt_long', route: '#', allowedRoles: ['SUPER_ADMIN', 'VENTAS_OPERATOR'] },
-  { id: 'inventory', label: 'Auditoría y Tomas Físicas', icon: 'inventory_2', route: '/inventario', allowedRoles: ['SUPER_ADMIN', 'BODEGA_OPERATOR'] },
+  { id: 'inventory', label: 'Auditoría y Tomas Físicas', icon: 'inventory_2', route: '/inventario', allowedRoles: ['BODEGA_OPERATOR'] },
   { id: 'billing', label: 'Facturación Fiscal', icon: 'request_quote', route: '#', allowedRoles: ['SUPER_ADMIN'] },
   { id: 'pos', label: 'Puntos de Venta (POS)', icon: 'point_of_sale', route: '#', allowedRoles: ['SUPER_ADMIN', 'VENTAS_OPERATOR'] }
 ]);

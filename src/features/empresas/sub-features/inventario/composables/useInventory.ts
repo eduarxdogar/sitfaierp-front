@@ -1,7 +1,7 @@
 import { computed, toValue } from 'vue';
 import { useQuery, useMutation } from '@tanstack/vue-query';
 import { INVENTORY_KEYS } from '../constants/inventory.keys';
-import { EstadoStock, TipoMovimiento, type ProductoInventario, type MovimientoKardex, type CrearMovimientoRequest } from '../dto/inventory.dto';
+import { EstadoStock, type ProductoInventario, type MovimientoKardex, type CrearMovimientoRequest } from '../dto/inventory.dto';
 import { httpClient } from '@/shared/services/http/client';
 import { useToast } from '@/shared/composables/use-toast';
 

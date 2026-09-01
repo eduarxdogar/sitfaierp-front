@@ -1,5 +1,5 @@
-﻿<script setup lang="ts">
-import { useSucursales } from '../composables/useSucursales';
+<script setup lang="ts">
+import { useSucursales } from './useSucursales';
 
 const props = defineProps<{ empresaId: string }>();
 const { obtenerSucursales } = useSucursales(() => props.empresaId);

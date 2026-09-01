@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useForm, useField } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { crearUsuarioSchema } from '../schema/iam.schema';
 import type { UsuarioResponse, RolResponse, CrearUsuarioRequest, EstadoUsuario } from '../dto/iam.dto';
-import { useSucursales } from '../../empresas/composables/useSucursales';
+import { useSucursales } from '../../empresas/sub-features/sucursales/useSucursales';
 import keycloak from '@/shared/services/auth/keycloak.client';
 
 // ─── Props & Emits ────────────────────────────────────────────────────────────
@@ -53,7 +53,6 @@ const { value: enviarInvitacion } = useField<boolean>('enviarInvitacion');
 
 const estados: EstadoUsuario[] = ['ACTIVO', 'INACTIVO', 'INVITADO', 'BLOQUEADO'];
 
-// Precargar datos cuando sea edición
 watch(
   () => props.usuarioEnEdicion,
   (usuario) => {
