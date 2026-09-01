@@ -40,3 +40,11 @@ export const crearUsuarioSchema = z.object({
 });
 
 export type CrearUsuarioForm = z.infer<typeof crearUsuarioSchema>;
+
+export const crearRolSchema = z.object({
+  nombre: z.string().min(3, 'El nombre debe tener al menos 3 caracteres').max(50, 'Máximo 50 caracteres'),
+  codigo: z.string().min(3, 'El código debe tener al menos 3 caracteres').max(30, 'Máximo 30 caracteres').regex(/^[A-Z0-9_]+$/, 'Solo mayúsculas, números y guiones bajos'),
+  descripcion: z.string().max(255, 'La descripción es muy larga').optional(),
+});
+
+export type CrearRolForm = z.infer<typeof crearRolSchema>;

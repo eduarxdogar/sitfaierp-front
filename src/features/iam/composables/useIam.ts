@@ -14,56 +14,8 @@ import type {
   RolResponse,
   CrearUsuarioRequest,
   CambiarEstadoRequest,
+  CrearRolRequest,
 } from '../dto/iam.dto';
-
-// ─── Roles quemados temporales (Keycloak los provee, endpoint pendiente) ─────
-export const ROLES_HARDCODED: RolResponse[] = [
-  {
-    id: '1',
-    codigo: 'SUPER_ADMIN',
-    nombre: 'Super Administrador',
-    descripcion: 'Acceso total al sistema ERP',
-    usuariosCount: 0,
-    esSistema: true,
-    fechaActualizacion: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    codigo: 'GERENTE_OPERACIONES',
-    nombre: 'Gerente de Operaciones',
-    descripcion: 'Gestión operativa de empresas y bodegas',
-    usuariosCount: 0,
-    esSistema: false,
-    fechaActualizacion: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    codigo: 'ANALISTA_FACTURACION',
-    nombre: 'Analista de Facturación',
-    descripcion: 'Acceso al módulo de facturación electrónica',
-    usuariosCount: 0,
-    esSistema: false,
-    fechaActualizacion: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    codigo: 'CAJERO_POS',
-    nombre: 'Cajero / Operador POS',
-    descripcion: 'Operación de puntos de venta',
-    usuariosCount: 0,
-    esSistema: false,
-    fechaActualizacion: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    codigo: 'BODEGA_OPERATOR',
-    nombre: 'Operador de Bodega',
-    descripcion: 'Gestión de inventario y almacenes',
-    usuariosCount: 0,
-    esSistema: false,
-    fechaActualizacion: new Date().toISOString(),
-  },
-];
 
 export function useIam() {
   const queryClient = useQueryClient();
@@ -79,6 +31,15 @@ export function useIam() {
     [...IAM_KEYS.all],
   );
 
+  /**
+   * GET http://localhost:8000/api/v1/iam/roles
+   * Lista todos los roles del sistema.
+   */
+  const obtenerRoles = useSimpleQueryHook<RolResponse[]>(
+    IAM_ENDPOINTS.roles,
+    [...IAM_KEYS.roles],
+  );
+
   // ── Mutations ──────────────────────────────────────────────────────────────
 
   /**
@@ -91,6 +52,20 @@ export function useIam() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [...IAM_KEYS.all] });
+      },
+    },
+  );
+
+  /**
+   * POST http://localhost:8000/api/v1/iam/roles
+   * Crea un nuevo rol.
+   */
+  const crearRol = useSimpleMutationHook<RolResponse, CrearRolRequest>(
+    IAM_ENDPOINTS.roles,
+    'POST',
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [...IAM_KEYS.roles] });
       },
     },
   );
@@ -146,8 +121,10 @@ export function useIam() {
   return {
     // queries
     obtenerUsuarios,
+    obtenerRoles,
     // mutations
     crearUsuario,
+    crearRol,
     cambiarEstadoUsuario,
     actualizarUsuario,
     eliminarUsuario,

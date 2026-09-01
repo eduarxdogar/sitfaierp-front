@@ -1,26 +1,30 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useIam, ROLES_HARDCODED } from './composables/useIam';
+import { useIam } from './composables/useIam';
 import { useToast } from '@/shared/composables/use-toast';
 import IamStats from './components/IamStats.vue';
 import UsuariosTable from './components/UsuariosTable.vue';
 import ModalUsuario from './components/ModalUsuario.vue';
-import type { UsuarioResponse, CrearUsuarioRequest, EstadoUsuario } from './dto/iam.dto';
+import RolesCardsTable from './components/RolesCardsTable.vue';
+import ModalRol from './components/ModalRol.vue';
+import type { UsuarioResponse, CrearUsuarioRequest, EstadoUsuario, RolResponse, CrearRolRequest } from './dto/iam.dto';
 
 // ─── Composables ──────────────────────────────────────────────────────────────
 const toast = useToast();
 const {
   obtenerUsuarios,
+  obtenerRoles,
   crearUsuario,
+  crearRol,
   actualizarUsuario,
   cambiarEstadoUsuario,
   eliminarUsuario,
 } = useIam();
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-// Roles: array quemado temporal hasta que el backend exponga GET /iam/roles
-const roles = ROLES_HARDCODED;
-const { data: usuarios, isLoading } = obtenerUsuarios;
+const { data: usuarios, isLoading: isLoadingUsuarios } = obtenerUsuarios;
+const { data: roles, isLoading: isLoadingRoles } = obtenerRoles;
+const isLoading = computed(() => isLoadingUsuarios.value || isLoadingRoles.value);
 
 // ─── Tabs ─────────────────────────────────────────────────────────────────────
 type Tab = 'usuarios' | 'roles';
@@ -32,6 +36,8 @@ const filtroEstado = ref<string>('ALL');
 const filtroRol = ref<string>('ALL');
 
 const filteredUsuarios = computed(() => {
+
+  
   const q = searchQuery.value.toLowerCase().trim();
   const estado = filtroEstado.value;
   const rolId = filtroRol.value;
@@ -50,7 +56,7 @@ const filteredUsuarios = computed(() => {
   });
 });
 
-// ─── Modal state ──────────────────────────────────────────────────────────────
+// ─── Modal Usuario state ──────────────────────────────────────────────────────
 const isModalOpen = ref(false);
 const usuarioEnEdicion = ref<UsuarioResponse | null>(null);
 
@@ -67,6 +73,25 @@ function abrirModalEditar(usuario: UsuarioResponse) {
 function cerrarModal() {
   isModalOpen.value = false;
   usuarioEnEdicion.value = null;
+}
+
+// ─── Modal Rol state ──────────────────────────────────────────────────────────
+const isModalRolOpen = ref(false);
+const rolEnEdicion = ref<RolResponse | null>(null);
+
+function abrirModalCrearRol() {
+  rolEnEdicion.value = null;
+  isModalRolOpen.value = true;
+}
+
+function abrirModalEditarRol(rol: RolResponse) {
+  rolEnEdicion.value = rol;
+  isModalRolOpen.value = true;
+}
+
+function cerrarModalRol() {
+  isModalRolOpen.value = false;
+  rolEnEdicion.value = null;
 }
 
 // ─── Handlers ─────────────────────────────────────────────────────────────────
@@ -106,6 +131,26 @@ async function handleEliminar(id: string) {
 function handleResetPassword(email: string) {
   toast.success(`Enlace de restablecimiento enviado a ${email}`);
 }
+
+async function handleSubmitRol(payload: CrearRolRequest) {
+  try {
+    if (rolEnEdicion.value) {
+      // await actualizarRol.mutateAsync({ id: rolEnEdicion.value.id, data: payload });
+      toast.success('Rol actualizado correctamente (mock).');
+    } else {
+      await crearRol.mutateAsync(payload);
+      toast.success('Rol creado con éxito.');
+    }
+    cerrarModalRol();
+  } catch (error: any) {
+    toast.error(error?.message ?? 'Error al guardar el rol.');
+  }
+}
+
+function handleEliminarRol(id: string) {
+  // await eliminarRol.mutateAsync(id);
+  toast.success(`Rol ${id} eliminado (mock).`);
+}
 </script>
 
 <template>
@@ -119,6 +164,14 @@ function handleResetPassword(email: string) {
       :is-pending="crearUsuario.isPending.value || actualizarUsuario.isPending.value"
       @close="cerrarModal"
       @submit="handleSubmitUsuario"
+    />
+
+    <ModalRol
+      v-if="isModalRolOpen"
+      :rol-en-edicion="rolEnEdicion"
+      :is-pending="crearRol.isPending.value"
+      @close="cerrarModalRol"
+      @submit="handleSubmitRol"
     />
 
     <!-- ── Page Header ────────────────────────────────────────────────────── -->
@@ -136,10 +189,11 @@ function handleResetPassword(email: string) {
       </div>
 
       <div class="flex items-center space-x-3">
-        <!-- Crear Rol (placeholder) -->
+        <!-- Crear Rol -->
         <button
           type="button"
           class="px-3.5 py-2 text-xs font-semibold text-text-main bg-white border border-border rounded-lg hover:bg-surface-50 transition-colors shadow-xs flex items-center cursor-pointer"
+          @click="abrirModalCrearRol"
         >
           <span class="material-symbols-outlined text-[18px] mr-1.5 text-text-muted">add_moderator</span>
           Crear Rol
@@ -190,7 +244,7 @@ function handleResetPassword(email: string) {
             @click="activeTab = 'roles'; searchQuery = ''"
           >
             <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-            <span>Roles y Permisos ({{ roles.length }})</span>
+            <span>Roles y Permisos ({{ roles?.length ?? 0 }})</span>
           </button>
         </div>
       </div>
@@ -229,7 +283,7 @@ function handleResetPassword(email: string) {
               class="pl-3 pr-8 py-2 text-xs border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none appearance-none cursor-pointer text-text-main"
             >
               <option value="ALL">Todos los Roles</option>
-              <option v-for="rol in roles" :key="rol.id" :value="rol.id">{{ rol.nombre }}</option>
+              <option v-for="rol in (roles ?? [])" :key="rol.id" :value="rol.id">{{ rol.nombre }}</option>
             </select>
             <span class="material-symbols-outlined absolute right-2.5 top-2.5 text-[16px] text-text-muted pointer-events-none">expand_more</span>
           </div>
@@ -272,15 +326,13 @@ function handleResetPassword(email: string) {
           />
         </template>
 
-        <!-- Tab: Roles (placeholder) -->
+        <!-- Tab: Roles -->
         <template v-else>
-          <div class="flex flex-col items-center justify-center py-16 text-text-muted">
-            <span class="material-symbols-outlined text-[40px] mb-3 opacity-30">admin_panel_settings</span>
-            <p class="font-medium text-text-main">Gestión de Roles — Próximamente</p>
-            <p class="text-xs text-text-muted mt-1">
-              La administración de roles y permisos RBAC estará disponible en la siguiente iteración.
-            </p>
-          </div>
+          <RolesCardsTable
+            :roles="roles ?? []"
+            @editar="abrirModalEditarRol"
+            @eliminar="handleEliminarRol"
+          />
         </template>
 
       </div>

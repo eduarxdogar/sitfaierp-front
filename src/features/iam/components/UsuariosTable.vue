@@ -90,7 +90,7 @@ function formatDate(iso?: string): { date: string; time: string } | null {
           <!-- Avatar + Nombre + Email -->
           <td class="px-4 py-3">
             <div class="flex items-center space-x-3">
-              <div class="h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+              <div class="h-9 w-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs shadow-sm shrink-0">
                 {{ usuario.avatarInitials || getInitials(usuario.nombreCompleto) }}
               </div>
               <div class="min-w-0">
@@ -161,7 +161,7 @@ function formatDate(iso?: string): { date: string; time: string } | null {
                 title="Restablecer contraseña"
                 class="p-1.5 rounded text-text-muted hover:text-amber-600 hover:bg-surface-50 transition-colors cursor-pointer"
                 @click="emit('resetPassword', usuario.email)"
-              >
+            >
                 <span class="material-symbols-outlined text-[18px]">key</span>
               </button>
 

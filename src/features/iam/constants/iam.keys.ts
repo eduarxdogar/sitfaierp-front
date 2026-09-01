@@ -7,11 +7,14 @@
 export const IAM_KEYS = {
   all: ['usuarios'] as const,
   detail: (id: string) => ['usuarios', id] as const,
+  roles: ['roles'] as const,
 } as const;
 
 export const IAM_ENDPOINTS = {
   /** → http://localhost:8000/api/v1/iam/usuarios  (GET / POST) */
   usuarios: 'iam/usuarios',
+  /** → http://localhost:8000/api/v1/iam/roles  (GET / POST) */
+  roles: 'iam/roles',
   /** → http://localhost:8000/api/v1/iam/usuarios/{id}/estado  (PATCH) */
   estado: (id: string) => `iam/usuarios/${id}/estado`,
   /** → http://localhost:8000/api/v1/iam/usuarios/{id}/desactivar  (PATCH) */

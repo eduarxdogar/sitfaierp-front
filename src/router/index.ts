@@ -56,6 +56,12 @@ const protectedRoutes = [
         meta: { key: 'iam' },
       },
       {
+        path: '/inventario',
+        name: 'inventario',
+        component: () => import('@features/inventory/inventory-page.vue'),
+        meta: { key: 'inventario' },
+      },
+      {
         path: "/unauthorized",
         name: "unauthorized",
         component: () =>

@@ -28,10 +28,10 @@ const currentTab = computed(() => {
 </script>
 
 <template>
-  <aside class="fixed left-0 top-0 bottom-0 w-[260px] bg-[#0F172A] border-r border-[#1E293B] flex flex-col z-30 shadow-xl overflow-hidden font-sans">
+  <aside class="fixed left-0 top-0 bottom-0 w-65 bg-text-main border-r border-[#1E293B] flex flex-col z-30 shadow-xl overflow-hidden font-sans">
     
     <!-- Branding Header -->
-    <div class="h-16 flex items-center gap-3 px-5 border-b border-[#1E293B] bg-[#0F172A]/90 backdrop-blur shrink-0 cursor-pointer hover:bg-[#1E293B]/50 transition-colors group">
+    <div class="h-16 flex items-center gap-3 px-5 border-b border-[#1E293B] bg-text-main/90 backdrop-blur shrink-0 cursor-pointer hover:bg-[#1E293B]/50 transition-colors group">
       <div class="h-9 w-9 flex items-center justify-center rounded-md bg-white/10 border border-slate-700/50 shadow-sm transition-transform group-hover:scale-105">
         <span class="material-symbols-outlined text-white text-[20px]">layers</span>
       </div>
@@ -52,7 +52,7 @@ const currentTab = computed(() => {
             class="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150 text-left"
             :class="[
               currentTab === item.id 
-                ? 'bg-[#1E293B] text-white border-l-[3px] border-[#2563eb] shadow-sm font-semibold pl-3' 
+                ? 'bg-[#1E293B] text-white border-l-[3px] border-primary shadow-sm font-semibold pl-3' 
                 : 'text-slate-400 hover:bg-[#1E293B]/70 hover:text-slate-100'
             ]"
           >

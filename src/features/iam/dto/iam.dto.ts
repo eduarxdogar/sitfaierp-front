@@ -28,6 +28,7 @@ export interface RolResponse {
   descripcion: string;
   usuariosCount: number;
   esSistema: boolean;
+  permisos?: PermisoModulo[];
   fechaActualizacion: string;
 }
 
@@ -45,4 +46,16 @@ export interface CrearUsuarioRequest {
 
 export interface CambiarEstadoRequest {
   estado: EstadoUsuario;
+}
+
+export interface PermisoModulo {
+  modulo: string;
+  acciones: string[];
+}
+
+export interface CrearRolRequest {
+  codigo: string;
+  nombre: string;
+  descripcion: string;
+  permisos: PermisoModulo[];
 }
